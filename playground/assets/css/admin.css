@@ -1,0 +1,113 @@
+/*
+ * Admin base layer and chart palette.
+ *
+ * Imported by the module's generated `tailwind.css`, not listed in `css`. That
+ * matters: Tailwind compiles utilities per entry point, so a `@theme` block in a
+ * stylesheet it does not compile would define the variables and then generate no
+ * `.shadow-card` / `.rounded-card` classes for them.
+ *
+ * This file carries only what cannot be expressed as a utility call at the point
+ * of use: the page background, focus and selection behaviour, the scrollbar, and
+ * the chart series colours. The `@layer base` rules below win over preflight,
+ * since this file is imported after it.
+ */
+
+/*
+ * Colour is deliberately NOT tokenised. The earlier `canvas` / `surface` /
+ * `ink` tokens are gone: with the dark palette in place, `bg-slate-950` and
+ * `text-slate-100` are both shorter and unambiguous, and they match the Tailwind
+ * scale the design brief is written in. An indirection that has to be re-read to
+ * know it means "slate 100" is worse than the value itself.
+ */
+@theme {
+  --radius-card: 0.875rem;
+
+  /* Dark surfaces need shadow to describe separation from a near-black canvas,
+     so the layers are deeper than a light theme would need. */
+  --shadow-card: 0 1px 2px oklch(0% 0 0 / 0.3), 0 1px 3px oklch(0% 0 0 / 0.24);
+  --shadow-raised: 0 4px 6px -1px oklch(0% 0 0 / 0.4),
+    0 2px 4px -2px oklch(0% 0 0 / 0.3);
+}
+
+:root {
+  color-scheme: dark;
+
+  /* Chart series. Distinct in hue and in lightness, so neighbouring segments
+     stay separable for viewers who cannot rely on colour alone. Tuned brighter
+     than a light-theme palette would need, because they sit on near-black. */
+  --chart-1: oklch(67.3% 0.182 276.935);
+  --chart-2: oklch(72% 0.13 217);
+  --chart-3: oklch(76.5% 0.177 163.223);
+  --chart-4: oklch(82.8% 0.189 84.429);
+  --chart-5: oklch(71.2% 0.194 13.428);
+  --chart-6: oklch(70.8% 0.17 320);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: oklch(12.9% 0.042 264.695);
+    color: oklch(96.8% 0.007 247.896);
+    /* System stack: no webfont request, and it renders with whatever the
+       platform already has cached. */
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+      "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* A visible focus ring is the only way keyboard users can tell where they
+     are. Only shown for keyboard interaction, so it never shows on click. */
+  :focus-visible {
+    outline: 2px solid oklch(67.3% 0.182 276.935);
+    outline-offset: 2px;
+    border-radius: 0.25rem;
+  }
+
+  ::selection {
+    /* The 600 step, not the brand token: the token is the 400 step, and white
+       text on it would not clear contrast. */
+    background-color: oklch(51.1% 0.262 276.966);
+    color: white;
+  }
+}
+
+@layer utilities {
+  /* Tabular figures keep columns of numbers from shifting as values change. */
+  .nums {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .scrollbar-slim {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(37.2% 0.044 257.287) transparent;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar-thumb {
+    background-color: oklch(37.2% 0.044 257.287);
+    border-radius: 9999px;
+  }
+
+  .scrollbar-slim::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
