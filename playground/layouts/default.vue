@@ -3,7 +3,7 @@ const { isCollapsed } = useSidebar()
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-950 font-sans text-slate-100 antialiased">
+  <div class="min-h-screen bg-slate-50 dark:bg-slate-950 font-sans text-slate-900 dark:text-slate-100 antialiased">
     <AppSidebar />
 
     <div
@@ -22,5 +22,7 @@ const { isCollapsed } = useSidebar()
     </div>
 
     <ToastHost />
+
+    <AiInsightsLauncher />
   </div>
 </template>

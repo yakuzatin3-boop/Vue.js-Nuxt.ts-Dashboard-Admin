@@ -195,7 +195,7 @@ const paymentSuccessRate = computed(() => {
     <template #actions>
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100"
         @click="refresh()"
       >
         <RefreshCw
@@ -230,15 +230,15 @@ const paymentSuccessRate = computed(() => {
             v-if="stats && stats.lowStockCount > 0"
             class="flex flex-wrap items-center gap-x-3 gap-y-2 rounded-xl border border-amber-500/20 bg-amber-500/10 px-4 py-3"
           >
-            <TriangleAlert class="h-5 w-5 shrink-0 text-amber-400" />
-            <p class="min-w-0 flex-1 text-sm text-amber-300">
+            <TriangleAlert class="h-5 w-5 shrink-0 text-amber-700 dark:text-amber-400" />
+            <p class="min-w-0 flex-1 text-sm text-amber-700 dark:text-amber-300">
               <span class="font-semibold">{{ formatNumber(stats.lowStockCount) }}</span>
               {{ stats.lowStockCount === 1 ? 'product is' : 'products are' }} at or below
               the low stock threshold.
             </p>
             <NuxtLink
               to="/inventory"
-              class="shrink-0 text-sm font-semibold text-amber-300 underline underline-offset-2 hover:text-amber-400"
+              class="shrink-0 text-sm font-semibold text-amber-700 dark:text-amber-300 underline underline-offset-2 hover:text-amber-700 dark:hover:text-amber-400"
             >
               Review inventory
             </NuxtLink>
@@ -252,9 +252,16 @@ const paymentSuccessRate = computed(() => {
               class="lg:col-span-2"
             >
               <template #actions>
+                <AskAiChartButton
+                  page="dashboard"
+                  chart-id="revenue-trend"
+                  chart-title="Revenue — last 6 months"
+                  date-range="last 6 months"
+                  :chart-data="{ chart: 'revenue-trend', series: revenueSeries }"
+                />
                 <NuxtLink
                   to="/analytics"
-                  class="text-xs font-medium text-indigo-400 hover:underline"
+                  class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
                   Analytics
                 </NuxtLink>
@@ -271,6 +278,15 @@ const paymentSuccessRate = computed(() => {
               description="Every order by current status."
               :icon="ShoppingBag"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="dashboard"
+                  chart-id="order-pipeline"
+                  chart-title="Order pipeline"
+                  :chart-data="{ chart: 'order-pipeline', slices: statusSlices }"
+                />
+              </template>
+
               <DonutChart
                 :slices="statusSlices"
                 :value-formatter="formatNumber"
@@ -289,7 +305,7 @@ const paymentSuccessRate = computed(() => {
               <template #actions>
                 <NuxtLink
                   to="/orders"
-                  class="text-xs font-medium text-indigo-400 hover:underline"
+                  class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
                   View all
                 </NuxtLink>
@@ -297,22 +313,22 @@ const paymentSuccessRate = computed(() => {
 
               <ul
                 v-if="stats?.recentOrders.length"
-                class="divide-y divide-slate-800/80"
+                class="divide-y divide-slate-200 dark:divide-slate-800/80"
               >
                 <li
                   v-for="order in stats.recentOrders"
                   :key="order.id"
-                  class="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-800/30"
+                  class="flex items-center gap-3 px-5 py-3 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
-                  <span class="nums flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-800 text-xs font-semibold text-slate-300">
+                  <span class="nums flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
                     #{{ order.id }}
                   </span>
 
                   <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-medium text-slate-100">
+                    <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                       {{ order.user?.name || order.user?.email || 'Guest' }}
                     </p>
-                    <p class="truncate text-xs text-slate-400">
+                    <p class="truncate text-xs text-slate-600 dark:text-slate-400">
                       {{ formatRelative(order.createdAt) }}
                     </p>
                   </div>
@@ -321,7 +337,7 @@ const paymentSuccessRate = computed(() => {
                     <StatusBadge :value="order.status" />
                   </div>
 
-                  <span class="nums shrink-0 text-sm font-semibold text-slate-100">
+                  <span class="nums shrink-0 text-sm font-semibold text-slate-900 dark:text-slate-100">
                     {{ formatCurrency(order.total) }}
                   </span>
                 </li>
@@ -366,36 +382,36 @@ const paymentSuccessRate = computed(() => {
                   :color="chartColor(4)"
                 />
 
-                <dl class="grid grid-cols-2 gap-3 border-t border-slate-800/80 pt-4">
+                <dl class="grid grid-cols-2 gap-3 border-t border-slate-200 dark:border-slate-800/80 pt-4">
                   <div>
-                    <dt class="text-xs text-slate-400">
+                    <dt class="text-xs text-slate-600 dark:text-slate-400">
                       Categories
                     </dt>
-                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-100">
+                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
                       {{ formatNumber(stats?.totalCategories) }}
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-xs text-slate-400">
+                    <dt class="text-xs text-slate-600 dark:text-slate-400">
                       Brands
                     </dt>
-                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-100">
+                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
                       {{ formatNumber(stats?.totalBrands) }}
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-xs text-slate-400">
+                    <dt class="text-xs text-slate-600 dark:text-slate-400">
                       Users
                     </dt>
-                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-100">
+                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
                       {{ formatNumber(stats?.totalUsers) }}
                     </dd>
                   </div>
                   <div>
-                    <dt class="text-xs text-slate-400">
+                    <dt class="text-xs text-slate-600 dark:text-slate-400">
                       Payments
                     </dt>
-                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-100">
+                    <dd class="nums mt-0.5 text-lg font-semibold text-slate-900 dark:text-slate-100">
                       {{ formatNumber(stats?.totalPayments) }}
                     </dd>
                   </div>
@@ -419,13 +435,13 @@ const paymentSuccessRate = computed(() => {
                   :key="product.productId"
                 >
                   <div class="mb-1.5 flex items-baseline gap-3">
-                    <span class="nums flex h-5 w-5 shrink-0 items-center justify-center rounded bg-slate-800 text-[11px] font-semibold text-slate-300">
+                    <span class="nums flex h-5 w-5 shrink-0 items-center justify-center rounded bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-700 dark:text-slate-300">
                       {{ index + 1 }}
                     </span>
-                    <span class="min-w-0 flex-1 truncate text-sm text-slate-100">
+                    <span class="min-w-0 flex-1 truncate text-sm text-slate-900 dark:text-slate-100">
                       {{ product.name }}
                     </span>
-                    <span class="nums shrink-0 text-sm font-medium text-slate-100">
+                    <span class="nums shrink-0 text-sm font-medium text-slate-900 dark:text-slate-100">
                       {{ formatCurrency(product.revenue) }}
                     </span>
                   </div>
@@ -455,6 +471,16 @@ const paymentSuccessRate = computed(() => {
               description="Volume behind the revenue trend."
               :icon="ShoppingBag"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="dashboard"
+                  chart-id="orders-per-month"
+                  chart-title="Orders per month"
+                  date-range="last 6 months"
+                  :chart-data="{ chart: 'orders-per-month', series: orderSeries }"
+                />
+              </template>
+
               <ColumnChart
                 :points="orderSeries"
                 :value-formatter="formatNumber"
@@ -480,7 +506,7 @@ const paymentSuccessRate = computed(() => {
                 ]"
                 :key="link.to"
                 :to="link.to"
-                class="group flex items-center gap-2.5 rounded-lg border border-slate-800/80 px-3 py-2.5 text-sm font-medium text-slate-300 transition-colors hover:border-indigo-500/30/40 hover:bg-indigo-500/10 hover:text-indigo-400"
+                class="group flex items-center gap-2.5 rounded-lg border border-slate-200 dark:border-slate-800/80 px-3 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors hover:border-indigo-500/30/40 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400"
               >
                 <component
                   :is="link.icon"

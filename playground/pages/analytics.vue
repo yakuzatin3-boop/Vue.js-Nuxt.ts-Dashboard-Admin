@@ -80,6 +80,13 @@ const revenueSeries = computed<ChartPoint[]>(() =>
   })),
 )
 
+const orderSeries = computed<ChartPoint[]>(() =>
+  monthAxis.value.map(month => ({
+    label: formatMonth(month),
+    value: Number(revenueByMonth.value[month]?.orders ?? 0),
+  })),
+)
+
 const customerSeries = computed<ChartPoint[]>(() =>
   monthAxis.value.map(month => ({
     label: formatMonth(month),
@@ -212,7 +219,7 @@ const metrics = computed(() => {
       />
       <button
         type="button"
-        class="inline-flex items-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100"
+        class="inline-flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100"
         @click="refresh()"
       >
         <RefreshCw
@@ -250,21 +257,30 @@ const metrics = computed(() => {
             :icon="Banknote"
           >
             <template #actions>
-              <div class="hidden items-center gap-4 text-xs text-slate-400 sm:flex">
-                <span class="inline-flex items-center gap-1.5">
-                  <span
-                    class="h-2 w-2 rounded-full"
-                    :style="{ backgroundColor: chartColor(0) }"
-                  />
-                  Revenue
-                </span>
-                <span class="inline-flex items-center gap-1.5">
-                  <span
-                    class="h-2 w-2 rounded-full"
-                    :style="{ backgroundColor: chartColor(1) }"
-                  />
-                  Orders
-                </span>
+              <div class="flex flex-wrap items-center justify-end gap-3">
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="revenue-trend"
+                  chart-title="Revenue trend"
+                  :date-range="`${months} months`"
+                  :chart-data="{ chart: 'revenue-trend', series: revenueSeries }"
+                />
+                <div class="hidden items-center gap-4 text-xs text-slate-600 dark:text-slate-400 sm:flex">
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="h-2 w-2 rounded-full"
+                      :style="{ backgroundColor: chartColor(0) }"
+                    />
+                    Revenue
+                  </span>
+                  <span class="inline-flex items-center gap-1.5">
+                    <span
+                      class="h-2 w-2 rounded-full"
+                      :style="{ backgroundColor: chartColor(1) }"
+                    />
+                    Orders
+                  </span>
+                </div>
               </div>
             </template>
 
@@ -280,11 +296,18 @@ const metrics = computed(() => {
               description="How many orders closed each month."
               :icon="ShoppingBag"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="orders-per-month"
+                  chart-title="Orders per month"
+                  :date-range="`${months} months`"
+                  :chart-data="{ chart: 'orders-per-month', series: orderSeries }"
+                />
+              </template>
+
               <ColumnChart
-                :points="revenueSeries.map((point, index) => ({
-                  label: point.label,
-                  value: revenueByMonth[monthAxis[index] ?? '']?.orders ?? 0,
-                }))"
+                :points="orderSeries"
                 :value-formatter="formatNumber"
                 :height="240"
               />
@@ -295,6 +318,16 @@ const metrics = computed(() => {
               description="Total items sold, regardless of order count."
               :icon="Boxes"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="units-per-month"
+                  chart-title="Units per month"
+                  :date-range="`${months} months`"
+                  :chart-data="{ chart: 'units-per-month', series: unitSeries }"
+                />
+              </template>
+
               <ColumnChart
                 :points="unitSeries"
                 :value-formatter="formatNumber"
@@ -310,6 +343,15 @@ const metrics = computed(() => {
               description="Where orders sit in the pipeline."
               :icon="CircleCheck"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="order-status-mix"
+                  chart-title="Order status mix"
+                  :chart-data="{ chart: 'order-status-mix', slices: statusSlices }"
+                />
+              </template>
+
               <DonutChart
                 :slices="statusSlices"
                 :value-formatter="formatNumber"
@@ -321,14 +363,24 @@ const metrics = computed(() => {
               description="Paid volume by method."
               :icon="CreditCard"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="payments-collected"
+                  chart-title="Payments collected"
+                  :date-range="`${months} months`"
+                  :chart-data="{ chart: 'payments-collected', slices: paymentSlices }"
+                />
+              </template>
+
               <DonutChart
                 :slices="paymentSlices"
                 :value-formatter="formatCompactCurrency"
               />
 
-              <p class="mt-4 border-t border-slate-800/80 pt-3 text-xs text-slate-400">
+              <p class="mt-4 border-t border-slate-200 dark:border-slate-800/80 pt-3 text-xs text-slate-600 dark:text-slate-400">
                 Total collected
-                <span class="nums font-semibold text-slate-100">
+                <span class="nums font-semibold text-slate-900 dark:text-slate-100">
                   {{ formatCurrency(totalPaymentAmount) }}
                 </span>
               </p>
@@ -339,6 +391,16 @@ const metrics = computed(() => {
               description="Accounts created each month."
               :icon="Users"
             >
+              <template #actions>
+                <AskAiChartButton
+                  page="analytics"
+                  chart-id="new-customers"
+                  chart-title="New customers"
+                  :date-range="`${months} months`"
+                  :chart-data="{ chart: 'new-customers', series: customerSeries }"
+                />
+              </template>
+
               <ColumnChart
                 :points="customerSeries"
                 :value-formatter="formatNumber"
@@ -423,7 +485,7 @@ const metrics = computed(() => {
               <template #actions>
                 <NuxtLink
                   to="/inventory"
-                  class="text-xs font-medium text-indigo-400 hover:underline"
+                  class="text-xs font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
                 >
                   Manage inventory
                 </NuxtLink>
@@ -431,7 +493,7 @@ const metrics = computed(() => {
 
               <ul
                 v-if="data?.lowStockItems.length"
-                class="divide-y divide-slate-800/80"
+                class="divide-y divide-slate-200 dark:divide-slate-800/80"
               >
                 <li
                   v-for="item in data.lowStockItems"
@@ -440,23 +502,23 @@ const metrics = computed(() => {
                 >
                   <span
                     class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg"
-                    :class="item.quantity === 0 ? 'bg-rose-500/10 text-rose-400' : 'bg-amber-500/10 text-amber-400'"
+                    :class="item.quantity === 0 ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400' : 'bg-amber-500/10 text-amber-700 dark:text-amber-400'"
                   >
                     <Package class="h-4 w-4" />
                   </span>
 
                   <div class="min-w-0 flex-1">
-                    <p class="truncate text-sm font-medium text-slate-100">
+                    <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                       {{ item.name }}
                     </p>
-                    <p class="text-xs text-slate-400">
+                    <p class="text-xs text-slate-600 dark:text-slate-400">
                       Threshold {{ formatNumber(item.threshold) }} · {{ formatNumber(item.reserved) }} reserved
                     </p>
                   </div>
 
                   <span
                     class="nums shrink-0 text-sm font-semibold"
-                    :class="item.quantity === 0 ? 'text-rose-400' : 'text-slate-100'"
+                    :class="item.quantity === 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-slate-100'"
                   >
                     {{ formatNumber(item.quantity) }}
                   </span>
@@ -479,27 +541,27 @@ const metrics = computed(() => {
             >
               <div class="space-y-5">
                 <div class="grid grid-cols-3 gap-3">
-                  <div class="rounded-lg bg-slate-950/50 border border-slate-800/50 px-3 py-3 text-center">
-                    <p class="nums text-xl font-semibold text-slate-100">
+                  <div class="rounded-lg bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/50 px-3 py-3 text-center">
+                    <p class="nums text-xl font-semibold text-slate-900 dark:text-slate-100">
                       {{ formatCompactNumber(data?.catalogueHealth.totalProducts) }}
                     </p>
-                    <p class="mt-0.5 text-xs text-slate-400">
+                    <p class="mt-0.5 text-xs text-slate-600 dark:text-slate-400">
                       Total
                     </p>
                   </div>
                   <div class="rounded-lg bg-emerald-500/10 px-3 py-3 text-center">
-                    <p class="nums text-xl font-semibold text-emerald-400">
+                    <p class="nums text-xl font-semibold text-emerald-700 dark:text-emerald-400">
                       {{ formatCompactNumber(data?.catalogueHealth.activeProducts) }}
                     </p>
-                    <p class="mt-0.5 text-xs text-emerald-400/80">
+                    <p class="mt-0.5 text-xs text-emerald-700/80 dark:text-emerald-400/80">
                       Active
                     </p>
                   </div>
-                  <div class="rounded-lg bg-slate-950/50 border border-slate-800/50 px-3 py-3 text-center">
-                    <p class="nums text-xl font-semibold text-slate-300">
+                  <div class="rounded-lg bg-slate-50 dark:bg-slate-950/50 border border-slate-200 dark:border-slate-800/50 px-3 py-3 text-center">
+                    <p class="nums text-xl font-semibold text-slate-700 dark:text-slate-300">
                       {{ formatCompactNumber(data?.catalogueHealth.inactiveProducts) }}
                     </p>
-                    <p class="mt-0.5 text-xs text-slate-400">
+                    <p class="mt-0.5 text-xs text-slate-600 dark:text-slate-400">
                       Inactive
                     </p>
                   </div>
