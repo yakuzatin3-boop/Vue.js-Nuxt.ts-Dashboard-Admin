@@ -6,10 +6,12 @@ import {
   LoaderCircle,
   LogOut,
   Menu,
+  Moon,
   PanelLeftClose,
   PanelLeftOpen,
   Plus,
   Search,
+  Sun,
   User,
 } from '@lucide/vue'
 import type { Component } from 'vue'
@@ -20,6 +22,7 @@ import { initials } from '~/utils/format'
 
 const { isCollapsed, toggleCollapsed, openMobile } = useSidebar()
 const { user, logout, fetchProfile } = useAuth()
+const { mode: themeMode, toggle: toggleTheme } = useTheme()
 const route = useRoute()
 
 const isProfileOpen = ref(false)
@@ -134,10 +137,10 @@ const signOut = async () => {
 </script>
 
 <template>
-  <header class="sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-slate-800/80 bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
+  <header class="sticky top-0 z-20 flex h-16 items-center gap-2 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
     <button
       type="button"
-      class="rounded-md p-2 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100 lg:hidden"
+      class="rounded-md p-2 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 lg:hidden"
       aria-label="Open navigation"
       @click="openMobile"
     >
@@ -146,7 +149,7 @@ const signOut = async () => {
 
     <button
       type="button"
-      class="hidden rounded-md p-2 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100 lg:inline-flex"
+      class="hidden rounded-md p-2 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 lg:inline-flex"
       :aria-label="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
       @click="toggleCollapsed"
     >
@@ -165,8 +168,8 @@ const signOut = async () => {
       class="hidden min-w-0 items-center gap-2 md:flex"
     >
       <span class="shrink-0 text-xs font-medium text-slate-500">Ecommerce</span>
-      <span class="text-xs text-slate-700">/</span>
-      <span class="truncate text-xs font-semibold text-slate-100">
+      <span class="text-xs text-slate-300 dark:text-slate-700">/</span>
+      <span class="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">
         {{ currentItem?.label ?? 'Dashboard' }}
       </span>
     </nav>
@@ -183,9 +186,9 @@ const signOut = async () => {
         type="search"
         placeholder="Search products…"
         aria-label="Search products"
-        class="w-full rounded-lg border border-slate-800 bg-slate-900/60 py-2 pr-16 pl-9 text-xs text-slate-100 transition-colors placeholder:text-slate-500 hover:border-slate-700/80 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+        class="w-full rounded-lg border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 py-2 pr-16 pl-9 text-xs text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 hover:border-slate-300 dark:hover:border-slate-700/80 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
       >
-      <kbd class="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-slate-700 bg-slate-800/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-400">
+      <kbd class="pointer-events-none absolute top-1/2 right-2 -translate-y-1/2 rounded border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800/80 px-1.5 py-0.5 font-mono text-[10px] font-medium text-slate-600 dark:text-slate-400">
         ⌘ K
       </kbd>
     </form>
@@ -205,17 +208,34 @@ const signOut = async () => {
 
       <button
         type="button"
-        class="relative rounded-md p-2 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100"
+        class="shrink-0 rounded-md p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/30 dark:hover:text-slate-100"
+        :aria-label="themeMode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'"
+        :title="themeMode === 'dark' ? 'Light mode' : 'Dark mode'"
+        @click="toggleTheme"
+      >
+        <Sun
+          v-if="themeMode === 'dark'"
+          class="h-5 w-5"
+        />
+        <Moon
+          v-else
+          class="h-5 w-5"
+        />
+      </button>
+
+      <button
+        type="button"
+        class="relative rounded-md p-2 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/30 dark:hover:text-slate-100"
         aria-label="Notifications"
       >
         <Bell class="h-5 w-5" />
         <span
           v-if="alertCount > 0"
-          class="nums absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 font-mono text-[10px] font-semibold text-white ring-2 ring-slate-950"
+          class="nums absolute -top-0.5 -right-0.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 font-mono text-[10px] font-semibold text-white ring-2 ring-white dark:ring-slate-950"
         >{{ alertCount > 99 ? '99+' : alertCount }}</span>
         <span
           v-else
-          class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-slate-500 ring-2 ring-slate-950"
+          class="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-slate-500 ring-2 ring-white dark:ring-slate-950"
         />
       </button>
 
@@ -225,7 +245,7 @@ const signOut = async () => {
       >
         <button
           type="button"
-          class="flex items-center gap-2 rounded-lg p-1.5 text-sm transition-colors hover:bg-slate-800/30"
+          class="flex items-center gap-2 rounded-lg p-1.5 text-sm transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30"
           :aria-expanded="isProfileOpen"
           aria-haspopup="menu"
           @click="isProfileOpen = !isProfileOpen"
@@ -237,7 +257,7 @@ const signOut = async () => {
             v-if="user"
             class="hidden text-left sm:block"
           >
-            <span class="block max-w-[10rem] truncate text-sm font-medium leading-tight text-slate-100">
+            <span class="block max-w-[10rem] truncate text-sm font-medium leading-tight text-slate-900 dark:text-slate-100">
               {{ user.name ?? user.email }}
             </span>
             <span class="block text-[11px] leading-tight text-slate-500">
@@ -258,10 +278,10 @@ const signOut = async () => {
           <div
             v-if="isProfileOpen"
             role="menu"
-            class="absolute right-0 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border border-slate-800 bg-slate-900 py-1 shadow-raised"
+            class="absolute right-0 mt-2 w-56 origin-top-right overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 py-1 shadow-raised"
           >
-            <div class="border-b border-slate-800 px-4 py-2.5">
-              <p class="truncate text-sm font-medium text-slate-100">
+            <div class="border-b border-slate-200 dark:border-slate-800 px-4 py-2.5">
+              <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
                 {{ user?.name ?? '—' }}
               </p>
               <p class="truncate text-[11px] text-slate-500">
@@ -271,7 +291,7 @@ const signOut = async () => {
             <button
               type="button"
               role="menuitem"
-              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100"
+              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100"
               @click="isProfileOpen = false"
             >
               <User class="h-4 w-4" /> Profile
@@ -279,7 +299,7 @@ const signOut = async () => {
             <button
               type="button"
               role="menuitem"
-              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-rose-400 transition-colors hover:bg-rose-500/10 disabled:opacity-60"
+              class="flex w-full items-center gap-2 px-4 py-2 text-sm text-rose-600 dark:text-rose-400 transition-colors hover:bg-rose-500/10 disabled:opacity-60"
               :disabled="isLoggingOut"
               @click="signOut"
             >

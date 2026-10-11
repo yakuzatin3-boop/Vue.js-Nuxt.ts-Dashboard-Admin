@@ -16,7 +16,7 @@ const emit = defineEmits<{ sort: [] }>()
   <th
     :scope="'col'"
     :class="[
-      'px-4 py-3 text-[11px] font-semibold tracking-wider text-slate-400 uppercase',
+      'px-4 py-3 text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase',
       align === 'right' ? 'text-right' : 'text-left',
     ]"
   >
@@ -24,7 +24,7 @@ const emit = defineEmits<{ sort: [] }>()
       v-if="sortKey"
       type="button"
       :aria-sort="state === 'none' ? 'none' : state"
-      class="group inline-flex items-center gap-1 transition-colors hover:text-slate-100"
+      class="group inline-flex items-center gap-1 transition-colors hover:text-slate-900 dark:hover:text-slate-100"
       @click="emit('sort')"
     >
       {{ label }}

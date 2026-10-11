@@ -8,6 +8,19 @@ export default defineNuxtConfig({
     { path: '~/components', pathPrefix: false },
   ],
   devtools: { enabled: true },
+  app: {
+    head: {
+      // Applies the persisted theme before first paint. Mirrors
+      // `resolveInitialMode` in composables/useTheme.ts: stored choice, then
+      // OS preference, then dark. Without it the page would paint light (the
+      // unprefixed default) and flip, which reads as a flash.
+      script: [
+        {
+          children: `(function(){try{var m=localStorage.getItem('admin-theme');if(m!=='dark'&&m!=='light'){m=window.matchMedia&&window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'}document.documentElement.classList.toggle('dark',m==='dark')}catch(e){document.documentElement.classList.add('dark')}})();`,
+        },
+      ],
+    },
+  },
   // No `css` entry on purpose. admin.css carries the `@theme` block, and Tailwind
   // only emits utilities for tokens inside its own compilation unit. It is
   // imported by the module's generated tailwind.css via `myModule.theme` below;

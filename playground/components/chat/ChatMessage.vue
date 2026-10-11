@@ -28,7 +28,7 @@ const timestamp = computed(() => new Date(props.message.at).toISOString())
   >
     <span
       class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full"
-      :class="isUser ? 'bg-slate-800 text-slate-300' : 'bg-indigo-600 text-white'"
+      :class="isUser ? 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300' : 'bg-indigo-600 text-white'"
       :aria-hidden="true"
     >
       <component
@@ -45,7 +45,7 @@ const timestamp = computed(() => new Date(props.message.at).toISOString())
         class="w-full rounded-2xl px-4 py-3"
         :class="isUser
           ? 'rounded-br-md bg-indigo-600 text-white'
-          : 'rounded-bl-md border border-slate-800/80 bg-slate-950/50'"
+          : 'rounded-bl-md border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50'"
       >
         <p
           v-if="isUser"
@@ -62,7 +62,7 @@ const timestamp = computed(() => new Date(props.message.at).toISOString())
 
         <p
           v-else
-          class="text-sm leading-6 text-slate-100"
+          class="text-sm leading-6 text-slate-900 dark:text-slate-100"
         >
           {{ message.text }}
         </p>
@@ -70,7 +70,7 @@ const timestamp = computed(() => new Date(props.message.at).toISOString())
 
       <time
         :datetime="timestamp"
-        class="px-1 text-[11px] text-slate-400"
+        class="px-1 text-[11px] text-slate-600 dark:text-slate-400"
       >
         {{ isUser ? 'You' : 'Chart Bot' }} · {{ formatDateTime(timestamp) }}
       </time>

@@ -110,21 +110,21 @@ onMounted(async () => {
           <div>
             <label
               for="name"
-              class="block text-sm font-medium text-slate-100"
+              class="block text-sm font-medium text-slate-900 dark:text-slate-100"
             >Full Name</label>
             <input
               id="name"
               v-model="profileForm.name"
               type="text"
               placeholder="John Doe"
-              class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+              class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
             >
           </div>
 
           <div>
             <label
               for="email"
-              class="block text-sm font-medium text-slate-100"
+              class="block text-sm font-medium text-slate-900 dark:text-slate-100"
             >Email Address</label>
             <input
               id="email"
@@ -132,13 +132,13 @@ onMounted(async () => {
               type="email"
               required
               placeholder="admin@store.com"
-              class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+              class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
             >
           </div>
 
           <p
             v-if="profileError"
-            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
           >
             {{ profileError }}
           </p>
@@ -169,7 +169,7 @@ onMounted(async () => {
           <div>
             <label
               for="currentPassword"
-              class="block text-sm font-medium text-slate-100"
+              class="block text-sm font-medium text-slate-900 dark:text-slate-100"
             >Current Password</label>
             <input
               id="currentPassword"
@@ -178,7 +178,7 @@ onMounted(async () => {
               required
               autocomplete="current-password"
               placeholder="••••••••"
-              class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+              class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
             >
           </div>
 
@@ -186,7 +186,7 @@ onMounted(async () => {
             <div>
               <label
                 for="newPassword"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >New Password</label>
               <input
                 id="newPassword"
@@ -195,14 +195,14 @@ onMounted(async () => {
                 required
                 autocomplete="new-password"
                 placeholder="••••••••"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
             </div>
 
             <div>
               <label
                 for="confirmPassword"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Confirm New Password</label>
               <input
                 id="confirmPassword"
@@ -211,14 +211,14 @@ onMounted(async () => {
                 required
                 autocomplete="new-password"
                 placeholder="••••••••"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
             </div>
           </div>
 
           <p
             v-if="passwordError"
-            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
           >
             {{ passwordError }}
           </p>
@@ -243,26 +243,26 @@ onMounted(async () => {
       >
         <dl class="grid gap-4 sm:grid-cols-2">
           <div>
-            <dt class="text-sm font-medium text-slate-300">
+            <dt class="text-sm font-medium text-slate-700 dark:text-slate-300">
               User ID
             </dt>
-            <dd class="mt-1 text-sm font-mono text-slate-100">
+            <dd class="mt-1 text-sm font-mono text-slate-900 dark:text-slate-100">
               #{{ user?.id }}
             </dd>
           </div>
           <div>
-            <dt class="text-sm font-medium text-slate-300">
+            <dt class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Role
             </dt>
-            <dd class="mt-1 text-sm text-slate-100">
+            <dd class="mt-1 text-sm text-slate-900 dark:text-slate-100">
               <StatusBadge :value="user?.role ?? 'ADMIN'" />
             </dd>
           </div>
           <div>
-            <dt class="text-sm font-medium text-slate-300">
+            <dt class="text-sm font-medium text-slate-700 dark:text-slate-300">
               Status
             </dt>
-            <dd class="mt-1 text-sm text-slate-100">
+            <dd class="mt-1 text-sm text-slate-900 dark:text-slate-100">
               <StatusBadge :value="user?.isActive ? 'ACTIVE' : 'INACTIVE'" />
             </dd>
           </div>

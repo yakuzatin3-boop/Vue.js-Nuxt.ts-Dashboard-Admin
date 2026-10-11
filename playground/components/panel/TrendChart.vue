@@ -163,7 +163,7 @@ const tooltipStyle = computed(() => {
   >
     <div
       v-if="!points.length"
-      class="flex items-center justify-center text-sm text-slate-400"
+      class="flex items-center justify-center text-sm text-slate-600 dark:text-slate-400"
       :style="{ height: `${height}px` }"
     >
       No data for this period.
@@ -209,7 +209,7 @@ const tooltipStyle = computed(() => {
         :y1="line.y"
         :y2="line.y"
         stroke="currentColor"
-        class="text-slate-300"
+        class="text-slate-700 dark:text-slate-300"
         stroke-width="1"
       />
 
@@ -241,7 +241,7 @@ const tooltipStyle = computed(() => {
           :cx="active.x"
           :cy="active.y"
           r="5"
-          fill="oklch(20.8% 0.042 265.755)"
+          class="fill-white dark:fill-slate-900"
           :stroke="color"
           stroke-width="2.5"
         />
@@ -254,19 +254,19 @@ const tooltipStyle = computed(() => {
         :x="point.x"
         :y="height - 8"
         text-anchor="middle"
-        class="fill-slate-400 text-[11px]"
+        class="fill-slate-600 dark:fill-slate-400 text-[11px]"
       >{{ point.label }}</text>
     </svg>
 
     <div
       v-if="active"
-      class="pointer-events-none absolute top-2 z-10 min-w-max rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 shadow-raised"
+      class="pointer-events-none absolute top-2 z-10 min-w-max rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 shadow-raised"
       :style="tooltipStyle"
     >
-      <p class="text-[11px] font-medium text-slate-400">
+      <p class="text-[11px] font-medium text-slate-600 dark:text-slate-400">
         {{ active.label }}
       </p>
-      <p class="nums text-sm font-semibold text-slate-100">
+      <p class="nums text-sm font-semibold text-slate-900 dark:text-slate-100">
         {{ valueFormatter(active.value) }}
       </p>
     </div>

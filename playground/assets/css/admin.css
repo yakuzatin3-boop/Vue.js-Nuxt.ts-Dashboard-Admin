@@ -1,5 +1,5 @@
 /*
- * Admin base layer and chart palette.
+ * Admin base layer, theme switch, and chart palette.
  *
  * Imported by the module's generated `tailwind.css`, not listed in `css`. That
  * matters: Tailwind compiles utilities per entry point, so a `@theme` block in a
@@ -8,33 +8,58 @@
  *
  * This file carries only what cannot be expressed as a utility call at the point
  * of use: the page background, focus and selection behaviour, the scrollbar, and
- * the chart series colours. The `@layer base` rules below win over preflight,
- * since this file is imported after it.
+ * the chart series colours.
+ *
+ * Theme: `dark:` is class-driven, not system-driven. The `@custom-variant` below
+ * replaces Tailwind's default `prefers-color-scheme` mapping, so every element
+ * carries a light class and a `dark:` counterpart, and an inline script in
+ * nuxt.config flips `html.dark` before first paint (persisted in localStorage
+ * via `useTheme`). Unprefixed = light; this file's base rules follow the same
+ * order: light defaults, `.dark` overrides.
  */
 
-/*
- * Colour is deliberately NOT tokenised. The earlier `canvas` / `surface` /
- * `ink` tokens are gone: with the dark palette in place, `bg-slate-950` and
- * `text-slate-100` are both shorter and unambiguous, and they match the Tailwind
- * scale the design brief is written in. An indirection that has to be re-read to
- * know it means "slate 100" is worse than the value itself.
- */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --radius-card: 0.875rem;
+
+  /* Light surfaces barely need shadow to separate from a light canvas, so the
+     layers are hairlines. The dark theme deepens them under `.dark`. */
+  --shadow-card: 0 1px 2px oklch(20.8% 0.042 265.755 / 0.06),
+    0 1px 3px oklch(20.8% 0.042 265.755 / 0.1);
+  --shadow-raised: 0 4px 6px -1px oklch(20.8% 0.042 265.755 / 0.1),
+    0 2px 4px -2px oklch(20.8% 0.042 265.755 / 0.06);
+}
+
+:root {
+  color-scheme: light;
+
+  --scrollbar-thumb: oklch(86.9% 0.022 258);
+
+  /* Chart series. Same hues as the dark palette, a few lightness steps down so
+     neighbouring segments stay separable and hold contrast on white. */
+  --chart-1: oklch(55.5% 0.2 276.935);
+  --chart-2: oklch(58% 0.15 217);
+  --chart-3: oklch(60% 0.15 163.223);
+  --chart-4: oklch(68% 0.16 84.429);
+  --chart-5: oklch(57% 0.21 13.428);
+  --chart-6: oklch(55% 0.19 320);
+}
+
+.dark {
+  color-scheme: dark;
 
   /* Dark surfaces need shadow to describe separation from a near-black canvas,
      so the layers are deeper than a light theme would need. */
   --shadow-card: 0 1px 2px oklch(0% 0 0 / 0.3), 0 1px 3px oklch(0% 0 0 / 0.24);
   --shadow-raised: 0 4px 6px -1px oklch(0% 0 0 / 0.4),
     0 2px 4px -2px oklch(0% 0 0 / 0.3);
-}
 
-:root {
-  color-scheme: dark;
+  --scrollbar-thumb: oklch(37.2% 0.044 257.287);
 
-  /* Chart series. Distinct in hue and in lightness, so neighbouring segments
-     stay separable for viewers who cannot rely on colour alone. Tuned brighter
-     than a light-theme palette would need, because they sit on near-black. */
+  /* Tuned brighter than a light-theme palette would need, because they sit on
+     near-black. Distinct in hue and in lightness, so neighbouring segments stay
+     separable for viewers who cannot rely on colour alone. */
   --chart-1: oklch(67.3% 0.182 276.935);
   --chart-2: oklch(72% 0.13 217);
   --chart-3: oklch(76.5% 0.177 163.223);
@@ -60,8 +85,8 @@
   }
 
   body {
-    background-color: oklch(12.9% 0.042 264.695);
-    color: oklch(96.8% 0.007 247.896);
+    background-color: oklch(97.7% 0.004 264.5);
+    color: oklch(20.8% 0.042 265.755);
     /* System stack: no webfont request, and it renders with whatever the
        platform already has cached. */
     font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
@@ -70,12 +95,23 @@
     -webkit-font-smoothing: antialiased;
   }
 
+  .dark body {
+    background-color: oklch(12.9% 0.042 264.695);
+    color: oklch(96.8% 0.007 247.896);
+  }
+
   /* A visible focus ring is the only way keyboard users can tell where they
-     are. Only shown for keyboard interaction, so it never shows on click. */
+     are. Only shown for keyboard interaction, so it never shows on click.
+     The 600 step on light (the 400 step would not clear 3:1 on white), the
+     brand's 400 step on dark. */
   :focus-visible {
-    outline: 2px solid oklch(67.3% 0.182 276.935);
+    outline: 2px solid oklch(51.1% 0.262 276.966);
     outline-offset: 2px;
     border-radius: 0.25rem;
+  }
+
+  .dark :focus-visible {
+    outline-color: oklch(67.3% 0.182 276.935);
   }
 
   ::selection {
@@ -94,7 +130,7 @@
 
   .scrollbar-slim {
     scrollbar-width: thin;
-    scrollbar-color: oklch(37.2% 0.044 257.287) transparent;
+    scrollbar-color: var(--scrollbar-thumb) transparent;
   }
 
   .scrollbar-slim::-webkit-scrollbar {
@@ -103,7 +139,7 @@
   }
 
   .scrollbar-slim::-webkit-scrollbar-thumb {
-    background-color: oklch(37.2% 0.044 257.287);
+    background-color: var(--scrollbar-thumb);
     border-radius: 9999px;
   }
 

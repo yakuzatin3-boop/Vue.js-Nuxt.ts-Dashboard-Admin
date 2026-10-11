@@ -53,7 +53,7 @@ const onKeydown = (event: KeyboardEvent) => {
   <div
     role="radiogroup"
     :aria-label="label"
-    class="inline-flex items-center gap-0.5 rounded-lg border border-slate-800 bg-slate-900/60 p-0.5"
+    class="inline-flex items-center gap-0.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 p-0.5"
     @keydown="onKeydown"
   >
     <button
@@ -67,7 +67,7 @@ const onKeydown = (event: KeyboardEvent) => {
       class="rounded-md px-2.5 py-1.5 text-xs font-medium whitespace-nowrap transition-colors"
       :class="option.value === modelValue
         ? 'bg-indigo-600 text-white shadow-sm'
-        : 'text-slate-300 hover:bg-slate-800/30 hover:text-slate-100'"
+        : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100'"
       @click="select(option.value)"
     >
       {{ option.label }}

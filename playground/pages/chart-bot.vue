@@ -27,6 +27,7 @@ import {
 } from '@lucide/vue'
 import { chartColor } from '~/types/chart'
 import { navigation } from '~/utils/navigation'
+import { renderMarkdown } from '~/utils/markdown'
 import {
   formatCompactCurrency,
   formatCompactNumber,
@@ -75,6 +76,7 @@ const dataCapabilities: Capability[] = [
   { label: 'Restock thresholds', detail: 'Live stock levels and the restock list' },
   { label: 'Payment success rates', detail: 'By method, with failure counts' },
   { label: 'Customers & ratings', detail: 'New customers per month, review scores' },
+  { label: 'Open-ended questions', detail: 'Anything else is answered by the AI assistant' },
 ]
 
 const {
@@ -127,8 +129,36 @@ const autocomplete = computed(() => {
 const lastIntent = computed(() => {
   const last = [...messages.value].reverse().find(entry => entry.reply)
 
-  return last?.reply ? humanize(last.reply.intent) : null
+  if (!last?.reply)
+    return null
+
+  return last.reply.intent === 'ai' ? 'AI assistant' : humanize(last.reply.intent)
 })
+
+/** Whether the latest answer was AI-generated, so the provenance card can say so. */
+const lastWasAi = computed(() => {
+  const last = [...messages.value].reverse().find(entry => entry.reply)
+
+  return last?.reply?.intent === 'ai'
+})
+
+/**
+ * The markdown block of the assistant turn currently streaming, or null. Lets
+ * the transcript show the typing dots inside the AI bubble instead of the
+ * "reading the store data" indicator used for the deterministic answers.
+ */
+const streamingAi = computed(() => {
+  const last = messages.value.at(-1)
+
+  if (last?.role !== 'assistant' || last.reply?.intent !== 'ai')
+    return null
+
+  const block = last.reply.blocks.find(entry => entry.kind === 'markdown')
+
+  return block && block.kind === 'markdown' ? block : null
+})
+
+const isStreamingAi = computed(() => thinking.value && !streamingAi.value?.text)
 
 const FORMATTERS: Record<ChatFormat, (value: number) => string> = {
   currency: formatCompactCurrency,
@@ -160,9 +190,9 @@ const barValue = (value: string | undefined) => {
 const rankMax = (rows: ChatRankRow[]) => Math.max(1, ...rows.map(row => barValue(row.value)))
 
 const NOTE_TONES = {
-  info: { wrap: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-300', icon: Info },
-  good: { wrap: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300', icon: CircleCheck },
-  warn: { wrap: 'border-amber-500/20 bg-amber-500/10 text-amber-300', icon: TriangleAlert },
+  info: { wrap: 'border-indigo-500/20 bg-indigo-500/10 text-indigo-600 dark:text-indigo-300', icon: Info },
+  good: { wrap: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300', icon: CircleCheck },
+  warn: { wrap: 'border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-300', icon: TriangleAlert },
 } as const
 
 const isBlockKind = <K extends ChatBlock['kind']>(
@@ -290,6 +320,13 @@ const scrollToLatest = async () => {
 watch(() => messages.value.length, scrollToLatest)
 watch(() => thinking.value, scrollToLatest)
 
+// Streaming appends to the existing turn rather than adding one, so the length
+// watch never fires; follow the growing text without the smooth scroll, which
+// would fight the reader on every token.
+watch(() => streamingAi.value?.text, () => {
+  void nextTick(() => transcript.value?.scrollTo({ top: transcript.value.scrollHeight }))
+})
+
 onMounted(() => {
   window.addEventListener('keydown', onGlobalKeydown)
   void nextTick(autoGrow)
@@ -303,20 +340,20 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 </script>
 
 <template>
-  <div class="flex h-screen overflow-hidden bg-slate-950 text-slate-100 antialiased">
+  <div class="flex h-screen overflow-hidden bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
     <div
       aria-hidden="true"
       class="pointer-events-none fixed inset-0 bg-[radial-gradient(55rem_35rem_at_0_0%,rgba(79,70,229,0.18),transparent_60%),radial-gradient(45rem_30rem_at_100%_100%,rgba(139,92,246,0.12),transparent_60%)]"
     />
 
     <!-- A. Left navigation -->
-    <aside class="relative z-10 hidden w-64 shrink-0 flex-col border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-md lg:flex">
-      <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-800/80 px-4">
+    <aside class="relative z-10 hidden w-64 shrink-0 flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md lg:flex">
+      <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 dark:border-slate-800/80 px-4">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/25">
           <Store class="h-5 w-5" />
         </span>
         <div class="min-w-0 flex-1">
-          <p class="truncate text-sm font-bold tracking-tight text-slate-100">
+          <p class="truncate text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
             Ecommerce
           </p>
           <p class="truncate text-[11px] text-slate-500">
@@ -332,7 +369,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
           :key="section.title"
           class="space-y-1"
         >
-          <p class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+          <p class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
             {{ section.title }}
           </p>
           <NuxtLink
@@ -341,8 +378,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
             :to="item.to"
             class="relative flex items-center gap-3 rounded-lg border px-3 py-2 text-sm font-medium transition-all duration-150"
             :class="item.to === '/chart-bot'
-              ? 'border-indigo-500/20 bg-indigo-600/10 text-indigo-400 shadow-[0_0_18px_-6px_rgba(99,102,241,0.65)]'
-              : 'border-transparent text-slate-400 hover:border-slate-700/80 hover:bg-slate-800/40 hover:text-slate-100'"
+              ? 'border-indigo-500/20 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 shadow-[0_0_18px_-6px_rgba(99,102,241,0.65)]'
+              : 'border-transparent text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100'"
           >
             <span
               v-if="item.to === '/chart-bot'"
@@ -358,13 +395,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
         </div>
       </nav>
 
-      <div class="shrink-0 border-t border-slate-800/80 p-3">
-        <div class="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-950/60 p-2.5 transition-all hover:border-slate-700/80">
+      <div class="shrink-0 border-t border-slate-200 dark:border-slate-800/80 p-3">
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-2.5 transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
           <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 text-xs font-bold text-white">
             {{ initials(user?.name, user?.email?.[0]?.toUpperCase() ?? 'A') }}
           </span>
           <div class="min-w-0 flex-1">
-            <p class="truncate text-xs font-semibold text-slate-100">
+            <p class="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">
               {{ user?.name ?? 'Administrator' }}
             </p>
             <p class="truncate text-[11px] text-slate-500">
@@ -374,7 +411,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
           <button
             type="button"
             title="Sign out"
-            class="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
+            class="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400"
             @click="logout()"
           >
             <LogOut class="h-4 w-4" />
@@ -386,13 +423,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
     <!-- Content column -->
     <div class="relative z-10 flex min-w-0 flex-1 flex-col">
       <!-- B. Chat header -->
-      <header class="flex h-16 shrink-0 items-center gap-4 border-b border-slate-800/80 bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
-        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-400 ring-1 ring-indigo-500/20">
+      <header class="flex h-16 shrink-0 items-center gap-4 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
+        <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 ring-1 ring-indigo-500/20">
           <Sparkles class="h-5 w-5" />
         </span>
 
         <div class="min-w-0 flex-1">
-          <h1 class="truncate text-sm font-bold tracking-tight text-slate-100">
+          <h1 class="truncate text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
             Chart Bot
           </h1>
           <p class="flex items-center gap-1.5 truncate text-[11px] text-slate-500">
@@ -416,7 +453,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
         <div class="flex shrink-0 items-center gap-2">
           <span
             v-if="pending"
-            class="hidden items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1.5 text-xs font-medium text-amber-400 sm:inline-flex"
+            class="hidden items-center gap-1.5 rounded-full border border-amber-500/20 bg-amber-500/10 px-2.5 py-1.5 text-xs font-medium text-amber-700 dark:text-amber-400 sm:inline-flex"
           >
             <LoaderCircle class="h-3.5 w-3.5 animate-spin" />
             Syncing
@@ -424,7 +461,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
           <button
             type="button"
-            class="hidden items-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-300 transition-all hover:border-slate-700/80 hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:inline-flex"
+            class="hidden items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all hover:border-slate-300 dark:hover:border-slate-700/80 hover:text-slate-900 dark:hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-50 sm:inline-flex"
             :disabled="thinking"
             @click="refresh()"
           >
@@ -437,7 +474,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
           <button
             type="button"
-            class="inline-flex items-center gap-2 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-300 transition-all hover:border-rose-500/30 hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50"
+            class="inline-flex items-center gap-2 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all hover:border-rose-500/30 hover:text-rose-600 dark:hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-50"
             :disabled="messages.length <= 1 || thinking"
             @click="clear()"
           >
@@ -459,7 +496,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
           >
             <p
               v-if="loadError"
-              class="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-300"
+              class="rounded-xl border border-rose-500/20 bg-rose-500/10 px-4 py-3 text-sm text-rose-600 dark:text-rose-300"
             >
               {{ loadError }}
             </p>
@@ -467,26 +504,27 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
             <!-- Welcome card -->
             <article
               v-if="isWelcomeOnly"
-              class="rounded-2xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-md transition-all hover:border-slate-700/80 sm:p-6"
+              class="rounded-2xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 backdrop-blur-md transition-all hover:border-slate-300 dark:hover:border-slate-700/80 sm:p-6"
             >
               <div class="flex items-start gap-3">
                 <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/25">
                   <Bot class="h-5 w-5" />
                 </span>
                 <div class="min-w-0 flex-1">
-                  <h2 class="text-sm font-bold tracking-tight text-slate-100">
+                  <h2 class="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                     Ask me anything about this store
                   </h2>
-                  <p class="mt-1 text-sm leading-6 text-slate-400">
-                    I read the same live data the dashboard does, so every figure I give
-                    you is one you can verify on the Analytics page.
+                  <p class="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400">
+                    Store questions are answered from the same live data the dashboard
+                    reads, and open-ended ones go to the AI assistant. Either way, you
+                    can verify the numbers on the Analytics page.
                   </p>
                 </div>
               </div>
 
-              <p class="mt-4 rounded-xl border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-xs text-indigo-200/80">
-                <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-300">Data in scope</span>
-                <span class="mt-1 block text-sm tabular-nums text-indigo-100">{{ dataScope.join(' • ') }}</span>
+              <p class="mt-4 rounded-xl border border-indigo-500/20 bg-indigo-500/10 px-4 py-3 text-xs text-indigo-600/80 dark:text-indigo-200/80">
+                <span class="text-[11px] font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-300">Data in scope</span>
+                <span class="mt-1 block text-sm tabular-nums text-indigo-600 dark:text-indigo-100">{{ dataScope.join(' • ') }}</span>
               </p>
 
               <div class="mt-4 flex flex-wrap gap-2">
@@ -494,7 +532,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                   v-for="chip in suggestions"
                   :key="chip"
                   type="button"
-                  class="rounded-full border border-slate-700/60 bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-300 transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 hover:text-indigo-400"
+                  class="rounded-full border border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 hover:text-indigo-600 dark:hover:text-indigo-400"
                   @click="onSuggest(chip)"
                 >
                   {{ chip }}
@@ -526,7 +564,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
                 <span
                   aria-hidden="true"
-                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-700/60 bg-slate-800 text-slate-300"
+                  class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300"
                 >
                   <User class="h-4 w-4" />
                 </span>
@@ -545,9 +583,12 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                 </span>
 
                 <div class="flex min-w-0 max-w-[min(46rem,90%)] flex-col items-start gap-1">
-                  <div class="w-full rounded-2xl rounded-tl-xs border border-slate-800 bg-slate-900/90 p-4">
-                    <p class="text-sm leading-6 text-slate-200">
-                      {{ message.reply?.headline ?? message.text }}
+                  <div class="w-full rounded-2xl rounded-tl-xs border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 p-4">
+                    <p
+                      v-if="message.reply ? message.reply.headline : message.text"
+                      class="text-sm leading-6 text-slate-800 dark:text-slate-200"
+                    >
+                      {{ message.reply?.headline || message.text }}
                     </p>
 
                     <div
@@ -558,27 +599,61 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                         v-for="(block, index) in message.reply.blocks"
                         :key="`${block.kind}-${index}`"
                       >
+                        <!-- Free-form answer streamed from the AI assistant -->
+                        <div
+                          v-if="isBlockKind(block, 'markdown')"
+                          class="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.04] p-3.5 dark:bg-indigo-500/[0.06]"
+                        >
+                          <p class="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+                            <Sparkles class="h-3.5 w-3.5" />
+                            AI assistant
+                          </p>
+
+                          <!-- Rendered by the escape-first markdown pass in
+                               `utils/markdown`, so v-html is safe here. -->
+                          <!-- eslint-disable vue/no-v-html -->
+                          <div
+                            v-if="block.text"
+                            class="markdown text-sm leading-6 text-slate-800 dark:text-slate-200"
+                            v-html="renderMarkdown(block.text)"
+                          />
+                          <!-- eslint-enable vue/no-v-html -->
+
+                          <div
+                            v-else
+                            class="flex items-center gap-2"
+                          >
+                            <span
+                              v-for="dot in 3"
+                              :key="dot"
+                              class="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400"
+                              :style="{ animationDelay: `${(dot - 1) * 150}ms` }"
+                            />
+                            <span class="ml-1 text-xs text-slate-600 dark:text-slate-400">Asking the assistant…</span>
+                          </div>
+                        </div>
+
                         <!-- Inline metric badges -->
                         <div
-                          v-if="isBlockKind(block, 'metrics')"
-                          class="overflow-hidden rounded-xl border border-slate-800 bg-slate-950/60"
+                          v-else-if="isBlockKind(block, 'metrics')"
+                          class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60"
                         >
                           <p
                             v-if="block.caption"
-                            class="border-b border-slate-800 px-3.5 py-2 text-[11px] font-medium uppercase tracking-wider text-slate-500"
+                            class="border-b border-slate-200 dark:border-slate-800 px-3.5 py-2 text-[11px] font-medium uppercase tracking-wider text-slate-500"
                           >
                             {{ block.caption }}
                           </p>
-                          <div class="grid grid-cols-2 gap-px bg-slate-800 sm:grid-cols-4">
+                          <div class="grid grid-cols-2 gap-px bg-slate-100 dark:bg-slate-800 sm:grid-cols-4">
                             <div
                               v-for="metric in block.items"
                               :key="metric.label"
-                              class="min-w-0 bg-slate-950/60 px-3.5 py-2.5"
+                              class="min-w-0 bg-slate-50 dark:bg-slate-950/60 px-3.5 py-2.5"
                             >
                               <p class="truncate text-[11px] font-medium uppercase tracking-wider text-slate-500">
                                 {{ metric.label }}
                               </p>
-                              <p class="mt-1 truncate text-sm font-bold text-slate-100 tabular-nums">
+                              <p class="mt-1 truncate text-sm font-bold text-slate-900 dark:text-slate-100 tabular-nums">
                                 {{ metric.value }}
                               </p>
                               <p
@@ -587,9 +662,9 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                                 :class="metric.change === null
                                   ? 'text-slate-500'
                                   : metric.change > 0
-                                    ? 'text-emerald-400'
+                                    ? 'text-emerald-700 dark:text-emerald-400'
                                     : metric.change < 0
-                                      ? 'text-rose-400'
+                                      ? 'text-rose-600 dark:text-rose-400'
                                       : 'text-slate-500'"
                               >
                                 <component
@@ -616,11 +691,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                         <!-- Trend sparkline -->
                         <div
                           v-else-if="isBlockKind(block, 'trend')"
-                          class="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5"
+                          class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-3.5"
                         >
                           <p
                             v-if="block.caption"
-                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500"
+                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-white"
                           >
                             {{ block.caption }}
                           </p>
@@ -646,7 +721,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                               vector-effect="non-scaling-stroke"
                             />
                           </svg>
-                          <div class="mt-2 flex justify-between text-[10px] text-slate-500">
+                          <div class="mt-2 flex justify-between text-[10px] text-slate-500 dark:text-white">
                             <span>{{ block.points[0]?.label }}</span>
                             <span>{{ block.points[block.points.length - 1]?.label }}</span>
                           </div>
@@ -655,11 +730,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                         <!-- Column chart -->
                         <div
                           v-else-if="isBlockKind(block, 'columns')"
-                          class="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5"
+                          class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-3.5"
                         >
                           <p
                             v-if="block.caption"
-                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500"
+                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-white"
                           >
                             {{ block.caption }}
                           </p>
@@ -679,7 +754,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                                   :title="`${point.label}: ${blockFormatter(block.format)(point.value)}`"
                                 />
                               </div>
-                              <span class="w-full truncate text-center text-[10px] text-slate-500">{{ point.label }}</span>
+                              <span class="w-full truncate text-center text-[10px] text-slate-500 dark:text-white">{{ point.label }}</span>
                             </div>
                           </div>
                         </div>
@@ -687,11 +762,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                         <!-- Donut -->
                         <div
                           v-else-if="isBlockKind(block, 'donut')"
-                          class="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5"
+                          class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-3.5"
                         >
                           <p
                             v-if="block.caption"
-                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500"
+                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-white"
                           >
                             {{ block.caption }}
                           </p>
@@ -708,7 +783,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                                 :r="DONUT_RADIUS"
                                 fill="none"
                                 stroke="currentColor"
-                                class="text-slate-300"
+                                class="text-slate-700 dark:text-slate-300"
                                 stroke-width="10"
                               />
                               <circle
@@ -737,8 +812,8 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                                   class="h-2 w-2 shrink-0 rounded-full"
                                   :style="{ backgroundColor: segment.color }"
                                 />
-                                <span class="min-w-0 flex-1 truncate text-slate-400">{{ segment.label }}</span>
-                                <span class="shrink-0 font-semibold text-slate-200 tabular-nums">
+                                <span class="min-w-0 flex-1 truncate text-slate-600 dark:text-white">{{ segment.label }}</span>
+                                <span class="shrink-0 font-semibold text-slate-800 dark:text-white tabular-nums">
                                   {{ Math.round(segment.share * 100) }}/
                                 </span>
                               </li>
@@ -749,11 +824,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                         <!-- Ranked list -->
                         <div
                           v-else-if="isBlockKind(block, 'rank')"
-                          class="rounded-xl border border-slate-800 bg-slate-950/60 p-3.5"
+                          class="rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950/60 p-3.5"
                         >
                           <p
                             v-if="block.caption"
-                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500"
+                            class="text-[11px] font-medium uppercase tracking-wider text-slate-500 dark:text-white"
                           >
                             {{ block.caption }}
                           </p>
@@ -767,17 +842,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                               class="min-w-0"
                             >
                               <div class="flex items-baseline gap-3">
-                                <span class="min-w-0 flex-1 truncate text-xs text-slate-300">{{ row.label }}</span>
+                                <span class="min-w-0 flex-1 truncate text-xs text-slate-700 dark:text-white">{{ row.label }}</span>
                                 <span
                                   v-if="row.value"
-                                  class="shrink-0 text-xs font-semibold text-slate-100 tabular-nums"
+                                  class="shrink-0 text-xs font-semibold text-slate-900 dark:text-white tabular-nums"
                                 >
                                   {{ row.value }}
                                 </span>
                               </div>
                               <div
                                 v-if="barValue(row.value)"
-                                class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-800"
+                                class="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"
                               >
                                 <div
                                   class="h-full rounded-full"
@@ -823,13 +898,13 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                     <!-- Follow ups -->
                     <div
                       v-if="message.reply?.suggestions.length"
-                      class="mt-3 flex flex-wrap gap-2 border-t border-slate-800/80 pt-3"
+                      class="mt-3 flex flex-wrap gap-2 border-t border-slate-200 dark:border-slate-800/80 pt-3"
                     >
                       <button
                         v-for="chip in message.reply.suggestions"
                         :key="chip"
                         type="button"
-                        class="rounded-full border border-slate-700/60 bg-slate-800/80 px-3 py-1.5 text-[11px] font-medium text-slate-300 transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 hover:text-indigo-400"
+                        class="rounded-full border border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/80 px-3 py-1.5 text-[11px] font-medium text-slate-700 dark:text-slate-300 transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 hover:text-indigo-600 dark:hover:text-indigo-400"
                         @click="onSuggest(chip)"
                       >
                         {{ chip }}
@@ -838,7 +913,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
                     <NuxtLink
                       to="/analytics"
-                      class="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-indigo-400 transition-colors hover:text-indigo-300"
+                      class="mt-3 inline-flex items-center gap-1.5 text-[11px] font-medium text-indigo-600 dark:text-indigo-400 transition-colors hover:text-indigo-600 dark:hover:text-indigo-300"
                     >
                       <ChartNoAxesCombined class="h-3.5 w-3.5" />
                       See data on Analytics page
@@ -855,9 +930,10 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
               </article>
             </template>
 
-            <!-- Thinking -->
+            <!-- Thinking. Suppressed while an AI reply is streaming, because the
+                 AI bubble carries the dots in that case. -->
             <div
-              v-if="thinking"
+              v-if="thinking && !isStreamingAi"
               class="flex gap-3"
               aria-live="polite"
             >
@@ -868,44 +944,44 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                 <Bot class="h-4 w-4" />
               </span>
 
-              <div class="rounded-2xl rounded-tl-xs border border-slate-800 bg-slate-900/90 px-4 py-3">
+              <div class="rounded-2xl rounded-tl-xs border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 px-4 py-3">
                 <div class="flex items-center gap-2">
                   <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400" />
                   <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400 [animation-delay:150ms]" />
                   <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-indigo-400 [animation-delay:300ms]" />
-                  <span class="ml-1 text-xs text-slate-400">Reading the store data…</span>
+                  <span class="ml-1 text-xs text-slate-600 dark:text-slate-400">Reading the store data…</span>
                 </div>
               </div>
             </div>
           </div>
 
           <!-- Sticky command bar -->
-          <div class="shrink-0 border-t border-slate-800/80 bg-slate-950/70 p-3 backdrop-blur-md sm:p-4">
+          <div class="shrink-0 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/70 p-3 backdrop-blur-md sm:p-4">
             <form
               class="relative mx-auto w-full max-w-3xl"
               @submit.prevent="canSend && submit()"
             >
               <div
                 v-if="autocomplete.length"
-                class="absolute bottom-full left-0 z-20 mb-2 w-full overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/95 backdrop-blur-md"
+                class="absolute bottom-full left-0 z-20 mb-2 w-full overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md"
               >
-                <p class="border-b border-slate-800/80 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-slate-500">
+                <p class="border-b border-slate-200 dark:border-slate-800/80 px-3 py-1.5 text-[11px] font-medium uppercase tracking-wider text-slate-500">
                   Complete your question
                 </p>
                 <button
                   v-for="entry in autocomplete"
                   :key="entry"
                   type="button"
-                  class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-xs text-slate-300 transition-colors hover:bg-indigo-600/10 hover:text-indigo-400"
+                  class="flex w-full items-center gap-2.5 px-3 py-2 text-left text-xs text-slate-700 dark:text-slate-300 transition-colors hover:bg-indigo-600/10 hover:text-indigo-600 dark:hover:text-indigo-400"
                   @click="applyAutocomplete(entry)"
                 >
                   <Sparkles class="h-3.5 w-3.5 shrink-0 text-slate-500" />
                   <span class="min-w-0 flex-1 truncate">{{ entry }}</span>
-                  <CornerDownLeft class="h-3 w-3 shrink-0 text-slate-300" />
+                  <CornerDownLeft class="h-3 w-3 shrink-0 text-slate-700 dark:text-slate-300" />
                 </button>
               </div>
 
-              <div class="flex items-end gap-2 rounded-2xl border border-indigo-500/40 bg-slate-900/80 p-2 shadow-2xl shadow-indigo-950/60 backdrop-blur-md transition-colors focus-within:border-indigo-500">
+              <div class="flex items-end gap-2 rounded-2xl border border-indigo-500/40 bg-white/80 dark:bg-slate-900/80 p-2 shadow-2xl shadow-indigo-950/60 backdrop-blur-md transition-colors focus-within:border-indigo-500">
                 <label
                   for="chart-bot-input"
                   class="sr-only"
@@ -922,7 +998,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                   rows="1"
                   placeholder="Ask about revenue, orders, products, stock, payments…"
                   autocomplete="off"
-                  class="max-h-40 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-sm leading-6 text-slate-100 placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
+                  class="max-h-40 min-h-10 min-w-0 flex-1 resize-none bg-transparent px-2 py-2.5 text-sm leading-6 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
                   @keydown="onComposerKeydown"
                 />
 
@@ -930,7 +1006,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                   <button
                     type="button"
                     title="Attach a file"
-                    class="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-800 hover:text-slate-200"
+                    class="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200"
                     @click="onAttach"
                   >
                     <Paperclip class="h-4 w-4" />
@@ -939,7 +1015,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                   <NuxtLink
                     to="/analytics"
                     title="Open the Analytics page"
-                    class="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-800 hover:text-slate-200"
+                    class="rounded-lg p-2 text-slate-500 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-800 dark:hover:text-slate-200"
                   >
                     <ChartNoAxesCombined class="h-4 w-4" />
                   </NuxtLink>
@@ -964,7 +1040,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
 
               <div class="mt-2 flex flex-wrap items-center justify-between gap-2 px-1 text-[11px] text-slate-500">
                 <span class="flex items-center gap-1.5">
-                  <span class="inline-flex items-center gap-1 rounded-md border border-slate-700/60 bg-slate-800/60 px-1.5 py-0.5 font-medium text-slate-400">
+                  <span class="inline-flex items-center gap-1 rounded-md border border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/60 px-1.5 py-0.5 font-medium text-slate-600 dark:text-slate-400">
                     <Command class="h-3 w-3" />
                     K
                   </span>
@@ -972,7 +1048,7 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                 </span>
                 <span
                   class="tabular-nums"
-                  :class="remaining <= 40 ? 'text-amber-400' : ''"
+                  :class="remaining <= 40 ? 'text-amber-700 dark:text-amber-400' : ''"
                 >
                   {{ remaining }} left
                 </span>
@@ -982,11 +1058,11 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
         </section>
 
         <!-- C. Context panel -->
-        <aside class="scrollbar-slim hidden min-h-0 flex-col gap-4 overflow-y-auto border-l border-slate-800/80 bg-slate-900/40 p-4 backdrop-blur-md xl:flex">
-          <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-4 transition-all hover:border-slate-700/80">
+        <aside class="scrollbar-slim hidden min-h-0 flex-col gap-4 overflow-y-auto border-l border-slate-200 dark:border-slate-800/80 bg-white/40 dark:bg-slate-900/40 p-4 backdrop-blur-md xl:flex">
+          <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-4 transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
             <div class="flex items-center gap-2">
-              <Sparkles class="h-4 w-4 text-indigo-400" />
-              <h2 class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              <Sparkles class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+              <h2 class="text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 Try asking
               </h2>
             </div>
@@ -999,17 +1075,17 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                 v-for="prompt in suggestedPrompts"
                 :key="prompt.question"
                 type="button"
-                class="group w-full rounded-lg border border-slate-700/60 bg-slate-800/80 p-3 text-left transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 disabled:cursor-not-allowed disabled:opacity-50"
+                class="group w-full rounded-lg border border-slate-300 dark:border-slate-700/60 bg-slate-100 dark:bg-slate-800/80 p-3 text-left transition-all hover:border-indigo-500/40 hover:bg-indigo-600/20 disabled:cursor-not-allowed disabled:opacity-50"
                 :disabled="thinking"
                 @click="onSuggest(prompt.question)"
               >
                 <span class="flex items-start gap-2.5">
                   <component
                     :is="prompt.icon"
-                    class="mt-0.5 h-4 w-4 shrink-0 text-slate-500 transition-colors group-hover:text-indigo-400"
+                    class="mt-0.5 h-4 w-4 shrink-0 text-slate-500 transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400"
                   />
                   <span class="min-w-0">
-                    <span class="block text-xs font-semibold text-slate-300 transition-colors group-hover:text-indigo-400">
+                    <span class="block text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400">
                       {{ prompt.question }}
                     </span>
                     <span class="mt-0.5 block text-[11px] text-slate-500">{{ prompt.hint }}</span>
@@ -1019,15 +1095,15 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
             </div>
           </section>
 
-          <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-4 transition-all hover:border-slate-700/80">
+          <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-4 transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
             <div class="flex items-center gap-2">
-              <Check class="h-4 w-4 text-emerald-400" />
-              <h2 class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              <Check class="h-4 w-4 text-emerald-700 dark:text-emerald-400" />
+              <h2 class="text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 What I can read
               </h2>
             </div>
             <p class="mt-1 text-[11px] text-slate-500">
-              Nothing is guessed. Every answer traces back to these.
+              Store questions are computed from these. Anything else is handed to the AI assistant.
             </p>
 
             <ul class="mt-3 space-y-2.5">
@@ -1036,24 +1112,31 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
                 :key="capability.label"
                 class="flex gap-2.5"
               >
-                <Check class="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
+                <Check class="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-700 dark:text-emerald-400" />
                 <span class="min-w-0">
-                  <span class="block text-xs font-semibold text-slate-300">{{ capability.label }}</span>
+                  <span class="block text-xs font-semibold text-slate-700 dark:text-slate-300">{{ capability.label }}</span>
                   <span class="block text-[11px] text-slate-500">{{ capability.detail }}</span>
                 </span>
               </li>
             </ul>
           </section>
 
-          <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-4">
+          <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-4">
             <p class="text-[11px] font-medium uppercase tracking-wider text-slate-500">
               Provenance
             </p>
             <p
-              v-if="lastIntent"
-              class="mt-1.5 text-xs leading-5 text-slate-400"
+              v-if="lastIntent && lastWasAi"
+              class="mt-1.5 text-xs leading-5 text-slate-600 dark:text-slate-400"
             >
-              Last answer was a <span class="font-semibold text-indigo-400">{{ lastIntent }}</span>
+              The last answer came from the <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ lastIntent }}</span>,
+              seeded with this store's context. Store answers stay exact; AI answers are interpretive.
+            </p>
+            <p
+              v-else-if="lastIntent"
+              class="mt-1.5 text-xs leading-5 text-slate-600 dark:text-slate-400"
+            >
+              Last answer was a <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ lastIntent }}</span>
               read from the live dataset. Change anything, then hit Refresh data to recalculate it.
             </p>
             <p
@@ -1068,3 +1151,149 @@ onBeforeUnmount(() => window.removeEventListener('keydown', onGlobalKeydown))
     </div>
   </div>
 </template>
+
+<style scoped>
+/* The AI answer renders into `.markdown` via v-html, and Tailwind cannot resolve
+   `@apply` inside a Vue scoped block, so these are plain CSS written against the
+   slate/indigo palette the rest of the admin uses. Dark mode is `html.dark`
+   (class-driven), so the flip is expressed that way here too. */
+:deep(.markdown) {
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  color: #0f172a;
+  overflow-wrap: break-word;
+}
+
+:deep(.markdown p) {
+  margin: 0;
+}
+
+:deep(.markdown > * + *) {
+  margin-top: 0.5rem;
+}
+
+:deep(.markdown h2) {
+  margin-top: 1.25rem;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+:deep(.markdown h3),
+:deep(.markdown h4) {
+  margin-top: 1rem;
+  margin-bottom: 0.25rem;
+  font-size: 0.875rem;
+  line-height: 1.5rem;
+  font-weight: 600;
+}
+
+:deep(.markdown ul),
+:deep(.markdown ol) {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  padding-left: 0;
+}
+
+:deep(.markdown li) {
+  position: relative;
+  margin-top: 0.25rem;
+  padding-left: 1rem;
+}
+
+:deep(.markdown li::before) {
+  content: '–';
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #94a3b8; /* slate-400 */
+}
+
+:deep(.markdown ol) {
+  counter-reset: chart-bot-md;
+}
+
+:deep(.markdown ol > li::before) {
+  counter-increment: chart-bot-md;
+  content: counter(chart-bot-md) '.';
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-weight: 500;
+  color: #94a3b8; /* slate-400 */
+}
+
+:deep(.markdown code) {
+  border-radius: 0.25rem;
+  background: #f1f5f9; /* slate-100 */
+  padding: 0.125rem 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.8125rem;
+  line-height: 1.25rem;
+  overflow-wrap: anywhere;
+  color: #4f46e5; /* indigo-600 */
+}
+
+:deep(.markdown pre) {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+  border: 1px solid #e2e8f0; /* slate-200 */
+  background: #0f172a; /* slate-900 */
+  padding: 0.75rem 1rem;
+}
+
+:deep(.markdown pre code) {
+  background: transparent;
+  padding: 0;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  color: #f1f5f9; /* slate-100 */
+}
+
+:deep(.markdown blockquote) {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
+  border-left: 2px solid rgb(99 102 241 / 0.4); /* indigo-500/40 */
+  padding-left: 0.75rem;
+  color: #475569; /* slate-600 */
+}
+
+:deep(.markdown a) {
+  color: #4f46e5; /* indigo-600 */
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+:deep(.markdown a:hover) {
+  opacity: 0.8;
+}
+
+html.dark :deep(.markdown) {
+  color: #f1f5f9; /* slate-100 */
+}
+
+html.dark :deep(.markdown code) {
+  background: #1e293b; /* slate-800 */
+  color: #818cf8; /* indigo-400 */
+}
+
+html.dark :deep(.markdown pre) {
+  border-color: #1e293b; /* slate-800 */
+  background: #020617; /* slate-950 */
+}
+
+html.dark :deep(.markdown pre code) {
+  color: #f1f5f9;
+}
+
+html.dark :deep(.markdown blockquote) {
+  color: #94a3b8; /* slate-400 */
+}
+
+html.dark :deep(.markdown a) {
+  color: #818cf8; /* indigo-400 */
+}
+</style>

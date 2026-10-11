@@ -15,19 +15,24 @@
 import type { AdminStats, Analytics, Category, Inventory, Product, Review } from '~/types/api'
 import type { ChatData, ChatDataset, ChatMessage, ChatReply } from '~/types/chat'
 import { answerQuestion, CHAT_MONTHS, routeQuestion, SUGGESTIONS } from '~/utils/chatbot'
+import { readSseError, readSseStream } from '~/utils/sse'
 import { toApiError } from '~/utils/api-error'
 
-const WELCOME = 'Ask me anything about this store. I read the same live data the dashboard does, so every number I give you is one you can verify on the Analytics page.'
+const STREAM_TIMEOUT_MS = 90_000
+
+const WELCOME = 'Ask me anything about this store. Store questions come from the same live data the dashboard uses, so you can verify the numbers on the Analytics page — and anything else goes to the AI assistant.'
 
 const welcomeReply = (): ChatReply => ({
   intent: 'help',
   headline: WELCOME,
   blocks: [],
-  suggestions: SUGGESTIONS.slice(0, 4).map(entry => entry.label),
+  suggestions: ['How is the store doing?', 'What are my top 5 products?', 'What should I work on?', 'Give me ideas to sell more'],
 })
 
 export const useChartBot = async () => {
   const api = useApiClient()
+  const config = useRuntimeConfig()
+  const token = useTokenCookie()
   const toast = useToast()
 
   let nextId = 0
@@ -133,6 +138,133 @@ export const useChartBot = async () => {
 
   const replyFor = (question: string): ChatReply => answerQuestion(question, snapshot())
 
+  /**
+   * The AI fallback. Everything the rule engine recognises keeps its verified,
+   * chart-rendered answer; anything else is streamed from the same assistant the
+   * Insights panel uses, seeded with the store context, so an open-ended
+   * question gets a real answer instead of the "I only track..." shrug.
+   */
+  const aiReply = (): ChatReply => ({
+    intent: 'ai',
+    headline: '',
+    blocks: [{ kind: 'markdown', text: '' }],
+    suggestions: SUGGESTIONS.slice(0, 4).map(entry => entry.label),
+  })
+
+  /** The streaming markdown block of the assistant turn currently in flight. */
+  const activeMarkdown = () => {
+    const last = messages.value.at(-1)
+
+    if (last?.role !== 'assistant' || last.reply?.intent !== 'ai')
+      return null
+
+    const block = last.reply.blocks.find(entry => entry.kind === 'markdown')
+
+    return block && block.kind === 'markdown' ? block : null
+  }
+
+  const appendDelta = (text: string) => {
+    const block = activeMarkdown()
+
+    if (block)
+      block.text += text
+  }
+
+  const finalizeAi = (reply: string) => {
+    const block = activeMarkdown()
+
+    if (block)
+      block.text = reply
+  }
+
+  const failAi = (message: string) => {
+    const last = messages.value.at(-1)
+
+    const failure: ChatReply = {
+      intent: 'ai',
+      headline: 'I could not finish that answer.',
+      blocks: [{ kind: 'note', tone: 'warn', text: message }],
+      suggestions: SUGGESTIONS.slice(0, 4).map(entry => entry.label),
+    }
+
+    if (last?.role === 'assistant' && last.reply?.intent === 'ai')
+      last.reply = failure
+    else
+      push({ role: 'assistant', text: failure.headline, reply: failure })
+  }
+
+  const askAi = async (question: string) => {
+    push({ role: 'assistant', text: '', reply: aiReply() })
+
+    const headers: Record<string, string> = { 'Content-Type': 'application/json' }
+
+    if (token.value)
+      headers.Authorization = `Bearer ${token.value}`
+
+    try {
+      const res = await fetch(`${config.public.apiBase}/admin/ai/chat/stream`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ message: question, context: { page: 'chart-bot' } }),
+        signal: AbortSignal.timeout(STREAM_TIMEOUT_MS),
+      })
+
+      if (res.status === 401) {
+        token.value = null
+
+        if (import.meta.client && window.location.pathname !== '/login')
+          void navigateTo('/login')
+
+        throw new Error('Your session has expired. Please sign in again.')
+      }
+
+      if (!res.ok)
+        throw await readSseError(res)
+
+      if (!res.body)
+        throw new Error('The assistant produced no response body.')
+
+      await readSseStream(res.body, {
+        onDelta: appendDelta,
+        onDone: finalizeAi,
+        onError: failAi,
+      })
+    }
+    catch (caught) {
+      const message = caught instanceof Error
+        ? caught.name === 'TimeoutError'
+          ? 'The assistant took too long to answer. Try again with a shorter question.'
+          : caught.message
+        : 'Something went wrong while generating the answer.'
+
+      failAi(message)
+    }
+  }
+
+  /**
+   * Answers one question: deterministic when the router recognises the topic,
+   * streamed from the AI assistant when it does not. The route is computed with
+   * the catalogue in hand so a named product wins before the AI is consulted.
+   */
+  const respond = async (question: string, animate: boolean) => {
+    const routed = routeQuestion(question, catalogue.value.products as Product[])
+
+    if (routed.intent === 'unknown') {
+      await askAi(question)
+
+      return
+    }
+
+    // A short beat so the transition reads as the bot thinking rather than as
+    // a button that silently stops working. The answer itself is synchronous.
+    if (animate)
+      await new Promise(resolve => setTimeout(resolve, 200))
+
+    const reply = replyFor(question)
+
+    push({ role: 'assistant', text: reply.headline, reply })
+  }
+
   const ask = async (raw: string) => {
     const question = raw.trim()
 
@@ -146,13 +278,7 @@ export const useChartBot = async () => {
     try {
       await ensureDatasets(routeQuestion(question).datasets)
 
-      // A short beat so the transition reads as the bot thinking rather than as
-      // a button that silently stops working. The answer itself is synchronous.
-      await new Promise(resolve => setTimeout(resolve, 200))
-
-      const reply = replyFor(question)
-
-      push({ role: 'assistant', text: reply.headline, reply })
+      await respond(question, true)
 
       if (datasetError.value)
         toast.info(datasetError.value)
@@ -215,9 +341,9 @@ export const useChartBot = async () => {
     thinking.value = true
 
     try {
-      const reply = replyFor(lastQuestion.text)
-
-      push({ role: 'assistant', text: reply.headline, reply })
+      // Re-answers through the same router, so an AI answer is re-asked as an
+      // AI answer rather than silently downgraded to the rule engine's shrug.
+      await respond(lastQuestion.text, false)
       toast.success('Store data refreshed and the last answer recalculated.')
     }
     finally {

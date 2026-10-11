@@ -18,7 +18,7 @@ const emit = defineEmits<{ edit: [], remove: [] }>()
       :aria-label="editLabel ?? 'Edit'"
       :title="editLabel ?? 'Edit'"
       :disabled="disabled"
-      class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-indigo-400 disabled:cursor-not-allowed disabled:opacity-40"
+      class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:cursor-not-allowed disabled:opacity-40"
       @click="emit('edit')"
     >
       <Pencil class="h-3.5 w-3.5" />
@@ -28,7 +28,7 @@ const emit = defineEmits<{ edit: [], remove: [] }>()
       :aria-label="deleteLabel ?? 'Delete'"
       :title="deleteLabel ?? 'Delete'"
       :disabled="disabled"
-      class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-40"
+      class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-40"
       @click="emit('remove')"
     >
       <Trash2 class="h-3.5 w-3.5" />

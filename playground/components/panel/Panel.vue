@@ -26,7 +26,7 @@ withDefaults(
       // Translucent rather than solid: panels stack over the canvas and over
       // each other in some grids, and a fixed fill would flatten that. The
       // border is what actually defines the edge, so it lifts on hover.
-      'flex min-w-0 flex-col rounded-xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-700/80',
+      'flex min-w-0 flex-col rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-300 dark:hover:border-slate-700/80',
       stretch ? 'h-full' : '',
     ]"
   >
@@ -37,7 +37,7 @@ withDefaults(
       <div class="flex min-w-0 items-start gap-3">
         <span
           v-if="icon"
-          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400"
+          class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400"
         >
           <component
             :is="icon"
@@ -47,7 +47,7 @@ withDefaults(
 
         <div class="min-w-0">
           <slot name="header">
-            <h2 class="truncate text-[15px] leading-6 font-semibold text-slate-100">
+            <h2 class="truncate text-[15px] leading-6 font-semibold text-slate-900 dark:text-slate-100">
               {{ title }}
             </h2>
             <p

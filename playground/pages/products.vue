@@ -343,7 +343,7 @@ const confirmRemove = async () => {
         v-model="search"
         type="search"
         placeholder="Filter by name, SKU, brand or category…"
-        class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+        class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
       >
 
       <DataState
@@ -353,10 +353,10 @@ const confirmRemove = async () => {
         :empty-text="search ? 'No products match your filter.' : 'No products yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -369,15 +369,15 @@ const confirmRemove = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="row in items"
                   :key="row.id"
-                  class="hover:bg-slate-800/30"
+                  class="hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-3">
-                      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-950 border border-slate-800/80">
+                      <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80">
                         <img
                           v-if="row.image"
                           :src="row.image"
@@ -386,11 +386,11 @@ const confirmRemove = async () => {
                         >
                         <Image
                           v-else
-                          class="h-5 w-5 text-slate-400"
+                          class="h-5 w-5 text-slate-600 dark:text-slate-400"
                         />
                       </div>
                       <div>
-                        <p class="font-medium text-slate-100">
+                        <p class="font-medium text-slate-900 dark:text-slate-100">
                           {{ row.name }}
                         </p>
                         <div
@@ -399,31 +399,31 @@ const confirmRemove = async () => {
                         >
                           <span
                             v-if="row.isFeatured"
-                            class="inline-flex items-center rounded-full bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-400"
+                            class="inline-flex items-center rounded-full bg-indigo-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-indigo-600 dark:text-indigo-400"
                           >Featured</span>
                           <span
                             v-if="row.isBestseller"
-                            class="inline-flex items-center rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-400"
+                            class="inline-flex items-center rounded-full bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-semibold text-amber-700 dark:text-amber-400"
                           >Bestseller</span>
                         </div>
                       </div>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ row.sku ?? '—' }}
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ row.brand?.name ?? '—' }}
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ row.category?.name ?? '—' }}
                   </td>
-                  <td class="nums px-4 py-3 text-right font-medium text-slate-100">
+                  <td class="nums px-4 py-3 text-right font-medium text-slate-900 dark:text-slate-100">
                     {{ formatCurrency(row.price) }}
                   </td>
-                  <td class="nums px-4 py-3 text-right text-slate-300">
+                  <td class="nums px-4 py-3 text-right text-slate-700 dark:text-slate-300">
                     {{ Number(row.ratingAverage).toFixed(1) }}
-                    <span class="text-xs text-slate-400">({{ formatNumber(row.ratingCount) }})</span>
+                    <span class="text-xs text-slate-600 dark:text-slate-400">({{ formatNumber(row.ratingCount) }})</span>
                   </td>
                   <td class="px-4 py-3">
                     <StatusBadge :value="row.isActive ? 'ACTIVE' : 'INACTIVE'" />
@@ -464,7 +464,7 @@ const confirmRemove = async () => {
             <div class="sm:col-span-2">
               <label
                 for="name"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Name</label>
               <input
                 id="name"
@@ -472,12 +472,12 @@ const confirmRemove = async () => {
                 type="text"
                 required
                 placeholder="e.g. Wireless Headphones"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.name ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               >
               <p
                 v-if="errors.name"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.name }}
               </p>
@@ -486,35 +486,35 @@ const confirmRemove = async () => {
             <div class="sm:col-span-2">
               <label
                 for="description"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Description</label>
               <textarea
                 id="description"
                 v-model="form.description"
                 rows="3"
                 placeholder="Product description..."
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               />
             </div>
 
             <div>
               <label
                 for="sku"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >SKU</label>
               <input
                 id="sku"
                 v-model="form.sku"
                 type="text"
                 placeholder="PROD-0001"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
             </div>
 
             <div>
               <label
                 for="price"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Price</label>
               <input
                 id="price"
@@ -522,12 +522,12 @@ const confirmRemove = async () => {
                 type="text"
                 required
                 placeholder="0.00"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.price ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               >
               <p
                 v-if="errors.price"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.price }}
               </p>
@@ -536,19 +536,19 @@ const confirmRemove = async () => {
             <div class="sm:col-span-2">
               <label
                 for="image"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Main Image URL</label>
               <input
                 id="image"
                 v-model="form.image"
                 type="url"
                 placeholder="https://example.com/image.jpg"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.image ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               >
               <p
                 v-if="errors.image"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.image }}
               </p>
@@ -557,19 +557,19 @@ const confirmRemove = async () => {
             <div class="sm:col-span-2">
               <label
                 for="images"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Image Gallery (comma-separated URLs)</label>
               <input
                 id="images"
                 v-model="form.images"
                 type="text"
                 placeholder="https://example.com/1.jpg, https://example.com/2.jpg"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.images ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               >
               <p
                 v-if="errors.images"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.images }}
               </p>
@@ -578,12 +578,12 @@ const confirmRemove = async () => {
             <div>
               <label
                 for="brandId"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Brand</label>
               <select
                 id="brandId"
                 v-model="form.brandId"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
                 <option
                   v-for="option in brandOptions"
@@ -598,12 +598,12 @@ const confirmRemove = async () => {
             <div>
               <label
                 for="categoryId"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Category</label>
               <select
                 id="categoryId"
                 v-model="form.categoryId"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
                 <option
                   v-for="option in categoryOptions"
@@ -618,7 +618,7 @@ const confirmRemove = async () => {
             <div v-if="!isEditing">
               <label
                 for="initialStock"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Initial Stock</label>
               <input
                 id="initialStock"
@@ -626,12 +626,12 @@ const confirmRemove = async () => {
                 type="number"
                 min="0"
                 placeholder="0"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.initialStock ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               >
               <p
                 v-if="errors.initialStock"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.initialStock }}
               </p>
@@ -640,7 +640,7 @@ const confirmRemove = async () => {
             <div v-if="!isEditing">
               <label
                 for="lowStockThreshold"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Low Stock Threshold</label>
               <input
                 id="lowStockThreshold"
@@ -648,40 +648,40 @@ const confirmRemove = async () => {
                 type="number"
                 min="0"
                 placeholder="5"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               >
             </div>
 
             <div class="sm:col-span-2">
               <label
                 for="features"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Features (one per line)</label>
               <textarea
                 id="features"
                 v-model="form.features"
                 rows="4"
                 placeholder="Waterproof&#10;Noise Cancelling&#10;Long Battery Life"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
               />
             </div>
 
             <div class="sm:col-span-2">
               <label
                 for="specifications"
-                class="block text-sm font-medium text-slate-100"
+                class="block text-sm font-medium text-slate-900 dark:text-slate-100"
               >Specifications (JSON)</label>
               <textarea
                 id="specifications"
                 v-model="form.specifications"
                 rows="5"
                 placeholder="{&quot;Brand&quot;: &quot;Sony&quot;, &quot;Color&quot;: &quot;Black&quot;}"
-                class="mt-1.5 w-full rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm font-mono text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
+                class="mt-1.5 w-full rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm font-mono text-slate-900 dark:text-slate-100 transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20 focus:outline-none"
                 :class="errors.specifications ? 'border-rose-500/20 focus:border-rose-500/20 focus:ring-rose-500/20' : ''"
               />
               <p
                 v-if="errors.specifications"
-                class="mt-1 text-xs text-rose-400"
+                class="mt-1 text-xs text-rose-600 dark:text-rose-400"
               >
                 {{ errors.specifications }}
               </p>
@@ -689,35 +689,35 @@ const confirmRemove = async () => {
 
             <div class="sm:col-span-2">
               <div class="flex flex-wrap gap-6">
-                <label class="flex items-center gap-2 text-sm text-slate-100">
+                <label class="flex items-center gap-2 text-sm text-slate-900 dark:text-slate-100">
                   <input
                     v-model="form.isActive"
                     type="checkbox"
-                    class="h-4 w-4 rounded border-slate-800/80 text-indigo-400 focus:ring-indigo-500/30"
+                    class="h-4 w-4 rounded border-slate-200 dark:border-slate-800/80 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500/30"
                   >
                   Active
                 </label>
-                <label class="flex items-center gap-2 text-sm text-slate-100">
+                <label class="flex items-center gap-2 text-sm text-slate-900 dark:text-slate-100">
                   <input
                     v-model="form.isFeatured"
                     type="checkbox"
-                    class="h-4 w-4 rounded border-slate-800/80 text-indigo-400 focus:ring-indigo-500/30"
+                    class="h-4 w-4 rounded border-slate-200 dark:border-slate-800/80 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500/30"
                   >
                   Featured
                 </label>
-                <label class="flex items-center gap-2 text-sm text-slate-100">
+                <label class="flex items-center gap-2 text-sm text-slate-900 dark:text-slate-100">
                   <input
                     v-model="form.isBestseller"
                     type="checkbox"
-                    class="h-4 w-4 rounded border-slate-800/80 text-indigo-400 focus:ring-indigo-500/30"
+                    class="h-4 w-4 rounded border-slate-200 dark:border-slate-800/80 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500/30"
                   >
                   Bestseller
                 </label>
-                <label class="flex items-center gap-2 text-sm text-slate-100">
+                <label class="flex items-center gap-2 text-sm text-slate-900 dark:text-slate-100">
                   <input
                     v-model="form.isFlashSale"
                     type="checkbox"
-                    class="h-4 w-4 rounded border-slate-800/80 text-indigo-400 focus:ring-indigo-500/30"
+                    class="h-4 w-4 rounded border-slate-200 dark:border-slate-800/80 text-indigo-600 dark:text-indigo-400 focus:ring-indigo-500/30"
                   >
                   Flash Sale
                 </label>
@@ -727,7 +727,7 @@ const confirmRemove = async () => {
 
           <p
             v-if="saveError"
-            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
           >
             {{ saveError }}
           </p>
@@ -757,14 +757,14 @@ const confirmRemove = async () => {
         size="sm"
         @close="removalTarget = null"
       >
-        <p class="text-sm text-slate-300">
+        <p class="text-sm text-slate-700 dark:text-slate-300">
           Are you sure you want to delete
-          <strong class="text-slate-100">“{{ removalTarget?.name }}”</strong>? This action cannot be undone.
+          <strong class="text-slate-900 dark:text-slate-100">“{{ removalTarget?.name }}”</strong>? This action cannot be undone.
         </p>
 
         <p
           v-if="removeError"
-          class="mt-3 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+          class="mt-3 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
         >
           {{ removeError }}
         </p>

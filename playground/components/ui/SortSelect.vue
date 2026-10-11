@@ -23,7 +23,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: string | null], 'update:
     <select
       id="sort-by"
       :value="modelValue ?? ''"
-      class="rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm text-slate-300 outline-none transition-colors hover:bg-slate-800/30 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+      class="rounded-lg border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-700 dark:text-slate-300 outline-none transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
       @change="emit('update:modelValue', ($event.target as HTMLSelectElement).value || null)"
     >
       <option value="">
@@ -40,7 +40,7 @@ const emit = defineEmits<{ 'update:modelValue': [value: string | null], 'update:
 
     <button
       type="button"
-      class="inline-flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100 disabled:opacity-40"
+      class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm font-medium text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 disabled:opacity-40"
       :disabled="!modelValue"
       @click="emit('update:direction', direction === 'asc' ? 'desc' : 'asc')"
     >

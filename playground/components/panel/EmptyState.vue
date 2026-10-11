@@ -30,7 +30,7 @@ withDefaults(
   >
     <span
       v-if="icon"
-      class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-800 text-slate-400"
+      class="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400"
     >
       <component
         :is="icon"
@@ -38,13 +38,13 @@ withDefaults(
       />
     </span>
 
-    <p class="text-sm font-medium text-slate-100">
+    <p class="text-sm font-medium text-slate-900 dark:text-slate-100">
       {{ title }}
     </p>
 
     <p
       v-if="description"
-      class="mt-1 max-w-xs text-sm text-slate-400"
+      class="mt-1 max-w-xs text-sm text-slate-600 dark:text-slate-400"
     >
       {{ description }}
     </p>

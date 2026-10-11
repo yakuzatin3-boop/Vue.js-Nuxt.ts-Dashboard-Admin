@@ -169,7 +169,7 @@ const confirmRemove = async () => {
         v-model="search"
         type="search"
         placeholder="Filter categories…"
-        class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+        class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
       >
 
       <DataState
@@ -179,10 +179,10 @@ const confirmRemove = async () => {
         :empty-text="search ? 'No categories match your filter.' : 'No categories yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -195,11 +195,11 @@ const confirmRemove = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="category in items"
                   :key="category.id"
-                  class="hover:bg-slate-800/30"
+                  class="hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-3">
@@ -207,18 +207,18 @@ const confirmRemove = async () => {
                         v-if="category.image"
                         :src="category.image"
                         :alt="category.name"
-                        class="h-8 w-8 shrink-0 rounded-lg object-cover ring-1 ring-slate-800"
+                        class="h-8 w-8 shrink-0 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-800"
                       >
-                      <span class="font-medium text-slate-100">{{ category.name }}</span>
+                      <span class="font-medium text-slate-900 dark:text-slate-100">{{ category.name }}</span>
                     </div>
                   </td>
-                  <td class="max-w-md px-4 py-3 text-slate-300">
+                  <td class="max-w-md px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ category.description ?? '—' }}
                   </td>
                   <td class="px-4 py-3">
                     <StatusBadge :value="category.isActive ? 'ACTIVE' : 'INACTIVE'" />
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ formatRelative(category.updatedAt) }}
                   </td>
                   <td class="px-4 py-3">
@@ -298,7 +298,7 @@ const confirmRemove = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>

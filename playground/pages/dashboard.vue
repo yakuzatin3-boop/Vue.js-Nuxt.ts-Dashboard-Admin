@@ -247,28 +247,28 @@ const PAYMENT_METHODS: PaymentMethod[] = [
 
 const TONE_CLASS: Record<Tone, { text: string, chip: string, dot: string }> = {
   indigo: {
-    text: 'text-indigo-400',
-    chip: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
+    text: 'text-indigo-600 dark:text-indigo-400',
+    chip: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20',
     dot: 'bg-indigo-400',
   },
   emerald: {
-    text: 'text-emerald-400',
-    chip: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    text: 'text-emerald-700 dark:text-emerald-400',
+    chip: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20',
     dot: 'bg-emerald-400',
   },
   amber: {
-    text: 'text-amber-400',
-    chip: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    text: 'text-amber-700 dark:text-amber-400',
+    chip: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20',
     dot: 'bg-amber-400',
   },
   rose: {
-    text: 'text-rose-400',
-    chip: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
+    text: 'text-rose-600 dark:text-rose-400',
+    chip: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20',
     dot: 'bg-rose-400',
   },
   sky: {
-    text: 'text-sky-400',
-    chip: 'bg-sky-500/10 text-sky-400 border-sky-500/20',
+    text: 'text-sky-700 dark:text-sky-400',
+    chip: 'bg-sky-500/10 text-sky-700 dark:text-sky-400 border-sky-500/20',
     dot: 'bg-sky-400',
   },
 }
@@ -340,7 +340,7 @@ function sendPrompt(): void {
 </script>
 
 <template>
-  <div class="flex min-h-screen bg-slate-950 text-slate-100 antialiased">
+  <div class="flex min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 antialiased">
     <!-- Ambient wash so the near-black canvas does not read as flat. -->
     <div
       aria-hidden="true"
@@ -350,24 +350,24 @@ function sendPrompt(): void {
     <!-- Left rail -->
     <aside
       :class="[
-        'sticky top-0 z-30 flex h-screen shrink-0 flex-col border-r border-slate-800/80 bg-slate-900/60 backdrop-blur-md transition-[width] duration-300 ease-out',
+        'sticky top-0 z-30 flex h-screen shrink-0 flex-col border-r border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md transition-[width] duration-300 ease-out',
         isCollapsed ? 'w-[72px]' : 'w-64',
       ]"
     >
-      <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-800/80 px-4">
+      <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 dark:border-slate-800/80 px-4">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-600/25">
           <Store class="h-5 w-5" />
         </span>
         <template v-if="!isCollapsed">
           <div class="min-w-0 flex-1">
-            <p class="truncate text-sm font-bold tracking-tight text-slate-100">
+            <p class="truncate text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
               Ecommerce Admin
             </p>
             <p class="text-[11px] text-slate-500">
               Commerce OS
             </p>
           </div>
-          <span class="shrink-0 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[11px] font-semibold text-indigo-400">
+          <span class="shrink-0 rounded-full border border-indigo-500/30 bg-indigo-500/10 px-2 py-0.5 text-[11px] font-semibold text-indigo-600 dark:text-indigo-400">
             v2.4
           </span>
         </template>
@@ -381,13 +381,13 @@ function sendPrompt(): void {
         >
           <p
             v-if="!isCollapsed"
-            class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-400"
+            class="px-3 pb-1 text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400"
           >
             {{ section.title }}
           </p>
           <div
             v-else
-            class="mx-3 mb-2 border-t border-slate-800/80"
+            class="mx-3 mb-2 border-t border-slate-200 dark:border-slate-800/80"
           />
           <button
             v-for="item in section.items"
@@ -398,8 +398,8 @@ function sendPrompt(): void {
             :class="[
               'group relative flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-150',
               activeNav === item.label
-                ? 'border border-indigo-500/20 bg-indigo-600/10 text-indigo-400'
-                : 'border border-transparent text-slate-400 hover:border-slate-700/80 hover:bg-slate-800/40 hover:text-slate-100',
+                ? 'border border-indigo-500/20 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400'
+                : 'border border-transparent text-slate-600 dark:text-slate-400 hover:border-slate-300 dark:hover:border-slate-700/80 hover:bg-slate-100 dark:hover:bg-slate-800/40 hover:text-slate-900 dark:hover:text-slate-100',
             ]"
             @click="selectNav(item.label)"
           >
@@ -421,8 +421,8 @@ function sendPrompt(): void {
               :class="[
                 'shrink-0 rounded-md px-1.5 py-0.5 text-[11px] font-semibold',
                 item.badge === 'New'
-                  ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
-                  : 'border border-slate-700/80 bg-slate-800/60 text-slate-400',
+                  ? 'border border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                  : 'border border-slate-300 dark:border-slate-700/80 bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-400',
               ]"
             >
               {{ item.badge }}
@@ -431,15 +431,15 @@ function sendPrompt(): void {
         </div>
       </nav>
 
-      <div class="shrink-0 border-t border-slate-800/80 p-3">
-        <div class="flex items-center gap-3 rounded-xl border border-slate-800/80 bg-slate-950/60 p-2 transition-all hover:border-slate-700/80">
+      <div class="shrink-0 border-t border-slate-200 dark:border-slate-800/80 p-3">
+        <div class="flex items-center gap-3 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 p-2 transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
           <span class="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-indigo-500 to-sky-500 text-xs font-bold text-white">
             YK
-            <span class="absolute -right-0.5 -bottom-0.5 h-2.5 w-2.5 rounded-full border-2 border-slate-950 bg-emerald-400" />
+            <span class="absolute -right-0.5 -bottom-0.5 h-2.5 w-2.5 rounded-full border-2 border-white dark:border-slate-950 bg-emerald-400" />
           </span>
           <template v-if="!isCollapsed">
             <div class="min-w-0 flex-1">
-              <p class="truncate text-xs font-semibold text-slate-100">
+              <p class="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">
                 Yakuza Tin
               </p>
               <p class="truncate text-[11px] text-slate-500">
@@ -449,7 +449,7 @@ function sendPrompt(): void {
             <button
               type="button"
               title="Sign out"
-              class="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
+              class="shrink-0 rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400"
             >
               <LogOut class="h-4 w-4" />
             </button>
@@ -460,7 +460,7 @@ function sendPrompt(): void {
       <button
         type="button"
         :aria-label="isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'"
-        class="absolute top-[72px] -right-3 z-40 hidden h-6 w-6 items-center justify-center rounded-full border border-slate-700/80 bg-slate-900 text-slate-400 transition-colors hover:border-indigo-500/40 hover:text-indigo-400 lg:flex"
+        class="absolute top-[72px] -right-3 z-40 hidden h-6 w-6 items-center justify-center rounded-full border border-slate-300 dark:border-slate-700/80 bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 transition-colors hover:border-indigo-500/40 hover:text-indigo-600 dark:hover:text-indigo-400 lg:flex"
         @click="isCollapsed = !isCollapsed"
       >
         <component
@@ -472,19 +472,19 @@ function sendPrompt(): void {
 
     <!-- Content column -->
     <div class="relative z-10 flex min-w-0 flex-1 flex-col">
-      <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-4 border-b border-slate-800/80 bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
+      <header class="sticky top-0 z-20 flex h-16 shrink-0 items-center gap-4 border-b border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-950/80 px-4 backdrop-blur-md sm:px-6">
         <div class="min-w-0 flex-1">
           <nav
             aria-label="Breadcrumb"
             class="flex items-center gap-1.5 text-xs font-medium text-slate-500"
           >
             <span class="truncate">Ecommerce</span>
-            <ChevronRight class="h-3 w-3 shrink-0 text-slate-300" />
-            <span class="truncate text-slate-400">Chart Bot</span>
-            <ChevronRight class="h-3 w-3 shrink-0 text-slate-300" />
+            <ChevronRight class="h-3 w-3 shrink-0 text-slate-700 dark:text-slate-300" />
+            <span class="truncate text-slate-600 dark:text-slate-400">Chart Bot</span>
+            <ChevronRight class="h-3 w-3 shrink-0 text-slate-700 dark:text-slate-300" />
             <span
               aria-current="page"
-              class="truncate text-slate-100"
+              class="truncate text-slate-900 dark:text-slate-100"
             >Analytics</span>
           </nav>
           <p class="hidden text-[11px] text-slate-500 sm:block">
@@ -494,20 +494,20 @@ function sendPrompt(): void {
 
         <button
           type="button"
-          class="group flex h-9 w-full max-w-md items-center gap-2.5 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 text-left transition-all hover:border-slate-700/80 focus:border-indigo-500/40 focus:outline-none"
+          class="group flex h-9 w-full max-w-md items-center gap-2.5 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 text-left transition-all hover:border-slate-300 dark:hover:border-slate-700/80 focus:border-indigo-500/40 focus:outline-none"
           @click="paletteOpen = true"
         >
-          <Search class="h-4 w-4 shrink-0 text-slate-500 transition-colors group-hover:text-indigo-400" />
+          <Search class="h-4 w-4 shrink-0 text-slate-500 transition-colors group-hover:text-indigo-600 dark:group-hover:text-indigo-400" />
           <span class="flex-1 truncate text-xs text-slate-500 sm:text-sm">
             Search orders, products, customers…
           </span>
-          <span class="hidden shrink-0 items-center gap-1 rounded-md border border-slate-700/80 bg-slate-800/60 px-1.5 py-0.5 text-[11px] font-medium text-slate-400 sm:flex">
+          <span class="hidden shrink-0 items-center gap-1 rounded-md border border-slate-300 dark:border-slate-700/80 bg-slate-100 dark:bg-slate-800/60 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 dark:text-slate-400 sm:flex">
             <Command class="h-3 w-3" />
             K
           </span>
         </button>
 
-        <span class="hidden shrink-0 items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-400 md:flex">
+        <span class="hidden shrink-0 items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1.5 text-xs font-medium text-emerald-700 dark:text-emerald-400 md:flex">
           <span class="relative flex h-2 w-2">
             <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
             <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -517,7 +517,7 @@ function sendPrompt(): void {
 
         <button
           type="button"
-          class="relative hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-800/80 bg-slate-900/60 text-slate-400 transition-all hover:border-slate-700/80 hover:text-slate-100 sm:flex"
+          class="relative hidden h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 text-slate-600 dark:text-slate-400 transition-all hover:border-slate-300 dark:hover:border-slate-700/80 hover:text-slate-900 dark:hover:text-slate-100 sm:flex"
         >
           <Package class="h-4 w-4" />
           <span class="absolute -top-1 -right-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white">
@@ -530,14 +530,14 @@ function sendPrompt(): void {
         <!-- Critical inventory alert -->
         <section
           aria-label="Low stock alert"
-          class="rounded-xl border border-amber-500/20 bg-slate-900/60 p-4 backdrop-blur-md transition-all hover:border-amber-500/30 sm:p-5"
+          class="rounded-xl border border-amber-500/20 bg-white/60 dark:bg-slate-900/60 p-4 backdrop-blur-md transition-all hover:border-amber-500/30 sm:p-5"
         >
           <div class="flex flex-wrap items-center gap-3">
-            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-amber-500/20 bg-amber-500/10 text-amber-400">
+            <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-amber-500/20 bg-amber-500/10 text-amber-700 dark:text-amber-400">
               <TriangleAlert class="h-5 w-5" />
             </span>
             <div class="min-w-0 flex-1">
-              <p class="text-sm font-bold tracking-tight text-slate-100">
+              <p class="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                 4 products are at or below their reorder threshold
               </p>
               <p class="text-[11px] text-slate-500">
@@ -546,7 +546,7 @@ function sendPrompt(): void {
             </div>
             <button
               type="button"
-              class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-400 transition-colors hover:bg-amber-500/20"
+              class="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2 text-xs font-semibold text-amber-700 dark:text-amber-400 transition-colors hover:bg-amber-500/20"
             >
               Restock all
               <ArrowRight class="h-3.5 w-3.5" />
@@ -557,7 +557,7 @@ function sendPrompt(): void {
             <article
               v-for="item in LOW_STOCK_ITEMS"
               :key="item.sku"
-              class="flex items-center gap-3 rounded-lg border border-slate-800/80 bg-slate-950/60 px-3 py-2.5 transition-all hover:border-slate-700/80"
+              class="flex items-center gap-3 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 px-3 py-2.5 transition-all hover:border-slate-300 dark:hover:border-slate-700/80"
             >
               <span
                 :class="[
@@ -568,7 +568,7 @@ function sendPrompt(): void {
                 {{ item.remaining }}
               </span>
               <div class="min-w-0 flex-1">
-                <p class="truncate text-xs font-semibold text-slate-100">
+                <p class="truncate text-xs font-semibold text-slate-900 dark:text-slate-100">
                   {{ item.name }}
                 </p>
                 <p class="truncate text-[11px] text-slate-500">
@@ -592,14 +592,14 @@ function sendPrompt(): void {
           <article
             v-for="kpi in KPIS"
             :key="kpi.id"
-            class="group relative overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-700/80 hover:shadow-xl hover:shadow-indigo-950/40"
+            class="group relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 backdrop-blur-md transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 dark:hover:border-slate-700/80 hover:shadow-xl hover:shadow-indigo-950/40"
           >
             <div
               aria-hidden="true"
               class="pointer-events-none absolute -top-16 -right-16 h-32 w-32 rounded-full bg-indigo-500/10 opacity-0 blur-2xl transition-opacity duration-300 group-hover:opacity-100"
             />
             <div class="flex items-start justify-between gap-3">
-              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+              <p class="text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                 {{ kpi.title }}
               </p>
               <component
@@ -617,8 +617,8 @@ function sendPrompt(): void {
                 :class="[
                   'inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-xs font-semibold tabular-nums',
                   kpi.trend >= 0
-                    ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
-                    : 'border-rose-500/20 bg-rose-500/10 text-rose-400',
+                    ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                    : 'border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400',
                 ]"
               >
                 <component
@@ -658,10 +658,10 @@ function sendPrompt(): void {
         <!-- Analytics grid -->
         <section class="grid grid-cols-1 gap-6 lg:grid-cols-12">
           <div class="lg:col-span-8">
-            <article class="h-full rounded-xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-700/80">
-              <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800/80 px-5 py-4">
+            <article class="h-full rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
+              <header class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800/80 px-5 py-4">
                 <div>
-                  <h2 class="text-sm font-bold tracking-tight text-slate-100">
+                  <h2 class="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                     Top Selling Products
                   </h2>
                   <p class="text-[11px] text-slate-500">
@@ -670,14 +670,14 @@ function sendPrompt(): void {
                 </div>
                 <button
                   type="button"
-                  class="inline-flex items-center gap-1.5 rounded-lg border border-slate-800/80 bg-slate-950/60 px-3 py-1.5 text-xs font-medium text-slate-400 transition-all hover:border-slate-700/80 hover:text-slate-100"
+                  class="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 px-3 py-1.5 text-xs font-medium text-slate-600 dark:text-slate-400 transition-all hover:border-slate-300 dark:hover:border-slate-700/80 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   All products
                   <ChevronDown class="h-3.5 w-3.5" />
                 </button>
               </header>
 
-              <div class="hidden grid-cols-12 gap-3 border-b border-slate-800/80 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400 sm:grid">
+              <div class="hidden grid-cols-12 gap-3 border-b border-slate-200 dark:border-slate-800/80 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400 sm:grid">
                 <span class="col-span-1">#</span>
                 <span class="col-span-5">Product</span>
                 <span class="col-span-2 text-right">Units</span>
@@ -685,22 +685,22 @@ function sendPrompt(): void {
                 <span class="col-span-2 text-right">Trend</span>
               </div>
 
-              <ol class="divide-y divide-slate-800/60">
+              <ol class="divide-y divide-slate-200 dark:divide-slate-800/60">
                 <li
                   v-for="product in TOP_PRODUCTS"
                   :key="product.sku"
-                  class="grid grid-cols-12 items-center gap-3 px-5 py-3.5 transition-colors hover:bg-slate-800/30"
+                  class="grid grid-cols-12 items-center gap-3 px-5 py-3.5 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
-                  <span class="col-span-1 flex h-6 w-6 items-center justify-center rounded-md border border-slate-800/80 bg-slate-950/60 text-[11px] font-bold text-slate-400 tabular-nums">
+                  <span class="col-span-1 flex h-6 w-6 items-center justify-center rounded-md border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/60 text-[11px] font-bold text-slate-600 dark:text-slate-400 tabular-nums">
                     {{ product.rank }}
                   </span>
 
                   <div class="col-span-11 flex min-w-0 items-center gap-3 sm:col-span-5">
-                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-800/80 bg-slate-800/50 text-slate-400">
+                    <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800/80 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400">
                       <Package class="h-4 w-4" />
                     </span>
                     <div class="min-w-0">
-                      <p class="truncate text-sm font-semibold text-slate-100">
+                      <p class="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">
                         {{ product.name }}
                       </p>
                       <p class="truncate text-[11px] text-slate-500">
@@ -709,10 +709,10 @@ function sendPrompt(): void {
                     </div>
                   </div>
 
-                  <p class="col-span-5 hidden text-right text-sm text-slate-400 tabular-nums sm:col-span-2 sm:block">
+                  <p class="col-span-5 hidden text-right text-sm text-slate-600 dark:text-slate-400 tabular-nums sm:col-span-2 sm:block">
                     {{ product.unitsSold.toLocaleString('en-US') }}
                   </p>
-                  <p class="col-span-4 text-right text-sm font-semibold text-slate-100 tabular-nums sm:col-span-2">
+                  <p class="col-span-4 text-right text-sm font-semibold text-slate-900 dark:text-slate-100 tabular-nums sm:col-span-2">
                     {{ product.revenue }}
                   </p>
 
@@ -721,8 +721,8 @@ function sendPrompt(): void {
                       :class="[
                         'inline-flex items-center gap-0.5 rounded-full border px-1.5 py-0.5 text-[11px] font-semibold tabular-nums',
                         product.change >= 0
-                          ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-400'
-                          : 'border-rose-500/20 bg-rose-500/10 text-rose-400',
+                          ? 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400'
+                          : 'border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-400',
                       ]"
                     >
                       <component
@@ -738,9 +738,9 @@ function sendPrompt(): void {
           </div>
 
           <div class="lg:col-span-4">
-            <article class="h-full rounded-xl border border-slate-800/80 bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-700/80">
-              <header class="border-b border-slate-800/80 px-5 py-4">
-                <h2 class="text-sm font-bold tracking-tight text-slate-100">
+            <article class="h-full rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
+              <header class="border-b border-slate-200 dark:border-slate-800/80 px-5 py-4">
+                <h2 class="text-sm font-bold tracking-tight text-slate-900 dark:text-slate-100">
                   Revenue Trend
                 </h2>
                 <p class="text-[11px] text-slate-500">
@@ -755,22 +755,22 @@ function sendPrompt(): void {
                   class="group space-y-1.5"
                 >
                   <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs font-medium text-slate-400">{{ row.month }}</span>
+                    <span class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ row.month }}</span>
                     <span class="flex items-center gap-2">
-                      <span class="text-xs font-semibold text-slate-100 tabular-nums">
+                      <span class="text-xs font-semibold text-slate-900 dark:text-slate-100 tabular-nums">
                         {{ row.orders.toLocaleString('en-US') }}
                       </span>
                       <span
                         :class="[
                           'text-[11px] font-semibold tabular-nums',
-                          row.change >= 0 ? 'text-emerald-400' : 'text-rose-400',
+                          row.change >= 0 ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400',
                         ]"
                       >
                         {{ row.change >= 0 ? '+' : '' }}{{ row.change }}%
                       </span>
                     </span>
                   </div>
-                  <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-800/60">
+                  <div class="h-1.5 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800/60">
                     <div
                       class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-indigo-400 transition-[width] duration-500"
                       :style="{ width: `${Math.round((row.orders / maxOrders) * 100)}%` }"
@@ -778,8 +778,8 @@ function sendPrompt(): void {
                   </div>
                 </div>
 
-                <div class="border-t border-slate-800/80 pt-4">
-                  <p class="pb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <div class="border-t border-slate-200 dark:border-slate-800/80 pt-4">
+                  <p class="pb-3 text-[11px] font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Payment Methods
                   </p>
                   <div class="flex flex-wrap gap-2">
@@ -810,15 +810,15 @@ function sendPrompt(): void {
       <!-- Floating assistant -->
       <div class="pointer-events-none sticky bottom-0 z-20 px-4 pb-4 sm:px-6 sm:pb-6">
         <form
-          class="pointer-events-auto mx-auto flex w-full max-w-3xl items-center gap-2 rounded-xl border border-indigo-500/40 bg-slate-900/80 p-2 shadow-2xl shadow-indigo-950/60 backdrop-blur-md transition-colors focus-within:border-indigo-500"
+          class="pointer-events-auto mx-auto flex w-full max-w-3xl items-center gap-2 rounded-xl border border-indigo-500/40 bg-white/80 dark:bg-slate-900/80 p-2 shadow-2xl shadow-indigo-950/60 backdrop-blur-md transition-colors focus-within:border-indigo-500"
           @submit.prevent="sendPrompt"
         >
-          <Sparkles class="ml-1 h-4 w-4 shrink-0 text-indigo-400" />
+          <Sparkles class="ml-1 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
           <input
             v-model="prompt"
             type="text"
             placeholder="Ask the Chart Bot anything about revenue, stock or customers…"
-            class="min-w-0 flex-1 bg-transparent px-1 py-1.5 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
+            class="min-w-0 flex-1 bg-transparent px-1 py-1.5 text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:outline-none"
           >
           <button
             type="submit"
@@ -842,26 +842,26 @@ function sendPrompt(): void {
     <!-- Command palette -->
     <div
       v-if="paletteOpen"
-      class="fixed inset-0 z-50 flex items-start justify-center bg-slate-950/80 px-4 pt-[12vh] backdrop-blur-sm"
+      class="fixed inset-0 z-50 flex items-start justify-center bg-black/40 dark:bg-slate-950/80 px-4 pt-[12vh] backdrop-blur-sm"
       role="dialog"
       aria-modal="true"
       aria-label="Command palette"
       @click.self="paletteOpen = false"
     >
-      <div class="w-full max-w-lg overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/80 backdrop-blur-md">
-        <div class="flex items-center gap-3 border-b border-slate-800/80 px-4 py-3">
+      <div class="w-full max-w-lg overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/80 dark:bg-slate-900/80 backdrop-blur-md">
+        <div class="flex items-center gap-3 border-b border-slate-200 dark:border-slate-800/80 px-4 py-3">
           <Search class="h-4 w-4 shrink-0 text-slate-500" />
           <input
             v-model="paletteQuery"
             type="text"
             placeholder="Jump to a section…"
             autofocus
-            class="min-w-0 flex-1 bg-transparent text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none"
+            class="min-w-0 flex-1 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder:text-slate-500 focus:outline-none"
             @keydown.esc="paletteOpen = false"
           >
           <button
             type="button"
-            class="shrink-0 rounded-md border border-slate-700/80 bg-slate-800/60 px-1.5 py-0.5 text-[11px] font-medium text-slate-400"
+            class="shrink-0 rounded-md border border-slate-300 dark:border-slate-700/80 bg-slate-100 dark:bg-slate-800/60 px-1.5 py-0.5 text-[11px] font-medium text-slate-600 dark:text-slate-400"
             @click="paletteOpen = false"
           >
             Esc
@@ -881,7 +881,7 @@ function sendPrompt(): void {
               v-for="item in section.items"
               :key="item.label"
               type="button"
-              class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-indigo-600/10 hover:text-indigo-400"
+              class="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors hover:bg-indigo-600/10 hover:text-indigo-600 dark:hover:text-indigo-400"
               @click="selectNav(item.label)"
             >
               <component
@@ -889,7 +889,7 @@ function sendPrompt(): void {
                 class="h-4 w-4 shrink-0 text-slate-500"
               />
               <span class="flex-1 text-left">{{ item.label }}</span>
-              <ChevronRight class="h-3.5 w-3.5 shrink-0 text-slate-300" />
+              <ChevronRight class="h-3.5 w-3.5 shrink-0 text-slate-700 dark:text-slate-300" />
             </button>
           </div>
           <p

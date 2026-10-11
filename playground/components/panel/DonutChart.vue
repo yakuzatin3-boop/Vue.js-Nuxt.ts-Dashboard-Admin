@@ -74,7 +74,7 @@ const segments = computed(() => {
           :cy="center"
           :r="radius"
           fill="none"
-          class="stroke-slate-800"
+          class="stroke-slate-200 dark:stroke-slate-800"
           :stroke-width="thickness"
         />
 
@@ -96,10 +96,10 @@ const segments = computed(() => {
       </svg>
 
       <div class="absolute inset-0 flex flex-col items-center justify-center">
-        <span class="nums text-xl font-semibold tracking-tight text-slate-100">
+        <span class="nums text-xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           {{ valueFormatter(total) }}
         </span>
-        <span class="text-[11px] text-slate-400">Total</span>
+        <span class="text-[11px] text-slate-600 dark:text-slate-400">Total</span>
       </div>
     </div>
 
@@ -113,16 +113,16 @@ const segments = computed(() => {
           class="h-2.5 w-2.5 shrink-0 rounded-sm"
           :style="{ backgroundColor: segment.color }"
         />
-        <span class="min-w-0 flex-1 truncate text-slate-300">{{ segment.label }}</span>
-        <span class="nums shrink-0 font-medium text-slate-100">{{ valueFormatter(segment.value) }}</span>
-        <span class="nums w-10 shrink-0 text-right text-xs text-slate-400">
+        <span class="min-w-0 flex-1 truncate text-slate-700 dark:text-slate-300">{{ segment.label }}</span>
+        <span class="nums shrink-0 font-medium text-slate-900 dark:text-slate-100">{{ valueFormatter(segment.value) }}</span>
+        <span class="nums w-10 shrink-0 text-right text-xs text-slate-600 dark:text-slate-400">
           {{ segment.percent }}%
         </span>
       </li>
 
       <li
         v-if="!segments.length"
-        class="text-sm text-slate-400"
+        class="text-sm text-slate-600 dark:text-slate-400"
       >
         Nothing to break down yet.
       </li>

@@ -43,10 +43,10 @@ const changeText = computed(() => {
 </script>
 
 <template>
-  <div class="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 backdrop-blur-md transition-all hover:border-slate-700/80">
+  <div class="group flex min-w-0 flex-col overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 backdrop-blur-md transition-all hover:border-slate-300 dark:hover:border-slate-700/80">
     <div class="flex items-start justify-between gap-3">
       <div class="min-w-0">
-        <p class="truncate text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <p class="truncate text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
           {{ label }}
         </p>
         <p class="nums mt-2 truncate font-mono text-[26px] leading-8 font-bold tracking-tight text-white">
@@ -76,10 +76,10 @@ const changeText = computed(() => {
           v-if="changeText"
           class="inline-flex items-center gap-0.5 rounded-md px-1.5 py-0.5 text-xs font-semibold"
           :class="{
-            'bg-emerald-500/10 text-emerald-400': direction === 'up',
-            'bg-rose-500/10 text-rose-400': direction === 'down',
-            'bg-indigo-500/10 text-indigo-400': direction === 'new',
-            'bg-slate-800 text-slate-400': direction === 'flat',
+            'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400': direction === 'up',
+            'bg-rose-500/10 text-rose-600 dark:text-rose-400': direction === 'down',
+            'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400': direction === 'new',
+            'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400': direction === 'flat',
           }"
         >
           <ArrowUpRight
@@ -99,7 +99,7 @@ const changeText = computed(() => {
 
         <span
           v-if="hint"
-          class="truncate text-xs text-slate-400"
+          class="truncate text-xs text-slate-600 dark:text-slate-400"
         >{{ hint }}</span>
       </div>
 

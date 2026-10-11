@@ -43,6 +43,8 @@ export type ChatBlock
     | { kind: 'donut', caption?: string, slices: ChartSlice[], format: ChatFormat }
     | { kind: 'rank', caption?: string, rows: ChatRankRow[], empty?: string }
     | { kind: 'note', tone: 'info' | 'good' | 'warn', text: string }
+    /** Free-form answer streamed from the AI assistant. Rendered as markdown. */
+    | { kind: 'markdown', text: string }
 
 export interface ChatReply {
   intent: ChatIntent
@@ -80,6 +82,7 @@ export type ChatIntent
     | 'payments'
     | 'customers'
     | 'ratings'
+    | 'ai'
     | 'unknown'
 
 /** Optional datasets an intent needs beyond the two aggregate endpoints. */

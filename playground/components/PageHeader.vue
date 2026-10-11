@@ -22,12 +22,12 @@ defineProps<{
       </span>
 
       <div class="min-w-0">
-        <h1 class="text-xl font-bold tracking-tight text-slate-100 sm:text-2xl">
+        <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 sm:text-2xl">
           {{ title }}
         </h1>
         <p
           v-if="description"
-          class="mt-1 text-sm text-slate-400"
+          class="mt-1 text-sm text-slate-600 dark:text-slate-400"
         >
           {{ description }}
         </p>

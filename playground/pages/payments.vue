@@ -125,32 +125,32 @@ const submitStatus = async () => {
 
     <div class="space-y-4">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Total payments
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ total }}
           </p>
         </div>
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Settled revenue
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ formatCurrency(settled) }}
           </p>
         </div>
         <div
           class="rounded-xl border px-4 py-3 shadow-card"
-          :class="(statusCounts.get('FAILED') ?? 0) > 0 ? 'border-rose-500/20 bg-rose-500/10' : 'border-slate-800/80 bg-slate-900/60'"
+          :class="(statusCounts.get('FAILED') ?? 0) > 0 ? 'border-rose-500/20 bg-rose-500/10' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60'"
         >
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Failed
           </p>
           <p
             class="nums mt-1 text-xl font-semibold"
-            :class="(statusCounts.get('FAILED') ?? 0) > 0 ? 'text-rose-400' : 'text-slate-100'"
+            :class="(statusCounts.get('FAILED') ?? 0) > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-slate-900 dark:text-slate-100'"
           >
             {{ statusCounts.get('FAILED') ?? 0 }}
           </p>
@@ -162,7 +162,7 @@ const submitStatus = async () => {
           <button
             type="button"
             class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="statusFilter === '' ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400' : 'border-slate-800/80 bg-slate-900/60 text-slate-300 hover:bg-slate-800/30'"
+            :class="statusFilter === '' ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30'"
             @click="statusFilter = ''"
           >
             All
@@ -173,7 +173,7 @@ const submitStatus = async () => {
             :key="status.value"
             type="button"
             class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="statusFilter === status.value ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400' : 'border-slate-800/80 bg-slate-900/60 text-slate-300 hover:bg-slate-800/30'"
+            :class="statusFilter === status.value ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30'"
             @click="statusFilter = status.value"
           >
             {{ status.label }}
@@ -185,7 +185,7 @@ const submitStatus = async () => {
           v-model="search"
           type="search"
           placeholder="Filter by order, transaction ID or customer…"
-          class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+          class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
         >
       </div>
 
@@ -196,10 +196,10 @@ const submitStatus = async () => {
         :empty-text="search || statusFilter ? 'No payments match your filters.' : 'No payments yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -213,35 +213,35 @@ const submitStatus = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="payment in items"
                   :key="payment.id"
-                  class="hover:bg-slate-800/30"
+                  class="hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
-                  <td class="nums px-4 py-3 font-medium text-slate-100">
+                  <td class="nums px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
                     {{ payment.id }}
                   </td>
-                  <td class="nums px-4 py-3 text-slate-100">
+                  <td class="nums px-4 py-3 text-slate-900 dark:text-slate-100">
                     #{{ payment.orderId }}
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ payment.order?.user?.name ?? payment.order?.user?.email ?? '—' }}
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ humanize(payment.method) }}
                   </td>
-                  <td class="nums px-4 py-3 text-right font-medium text-slate-100">
+                  <td class="nums px-4 py-3 text-right font-medium text-slate-900 dark:text-slate-100">
                     {{ formatCurrency(payment.amount) }}
                   </td>
                   <td class="px-4 py-3">
                     <StatusBadge :value="payment.status" />
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ payment.transactionId ?? '—' }}
                   </td>
                   <td
-                    class="px-4 py-3 text-slate-300"
+                    class="px-4 py-3 text-slate-700 dark:text-slate-300"
                     :title="formatDateTime(payment.paidAt)"
                   >
                     {{ formatDate(payment.paidAt) }}
@@ -249,7 +249,7 @@ const submitStatus = async () => {
                   <td class="px-4 py-3 text-right">
                     <button
                       type="button"
-                      class="rounded-md px-2 py-1 text-xs font-medium text-indigo-400 transition-colors hover:bg-indigo-500/10"
+                      class="rounded-md px-2 py-1 text-xs font-medium text-indigo-600 dark:text-indigo-400 transition-colors hover:bg-indigo-500/10"
                       @click="openStatus(payment)"
                     >
                       Update
@@ -281,9 +281,9 @@ const submitStatus = async () => {
       @close="statusOpen = false"
     >
       <div class="space-y-4">
-        <div class="flex items-center justify-between rounded-lg bg-slate-950 px-3 py-2.5 text-sm">
-          <span class="text-slate-300">Order #{{ statusTarget?.orderId }} · {{ humanize(statusTarget?.method) }}</span>
-          <span class="nums font-semibold text-slate-100">{{ formatCurrency(statusTarget?.amount) }}</span>
+        <div class="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm">
+          <span class="text-slate-700 dark:text-slate-300">Order #{{ statusTarget?.orderId }} · {{ humanize(statusTarget?.method) }}</span>
+          <span class="nums font-semibold text-slate-900 dark:text-slate-100">{{ formatCurrency(statusTarget?.amount) }}</span>
         </div>
 
         <FormField label="Status">
@@ -307,7 +307,7 @@ const submitStatus = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>

@@ -19,17 +19,17 @@ interface StatusStyle {
 // Icon and colour per status. Both are carried together so a new status cannot
 // be added with a chip style but no icon, which would fall through to the dash.
 const STATUS_STYLES: Record<string, StatusStyle> = {
-  PENDING: { chip: 'bg-amber-500/10 text-amber-400 ring-amber-500/20', icon: Clock },
-  PAID: { chip: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20', icon: Wallet },
-  PROCESSING: { chip: 'bg-sky-500/10 text-sky-400 ring-sky-500/20', icon: Loader },
-  SHIPPED: { chip: 'bg-indigo-500/10 text-indigo-400 ring-indigo-500/20', icon: Truck },
-  DELIVERED: { chip: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20', icon: CircleCheck },
-  CANCELLED: { chip: 'bg-rose-500/10 text-rose-400 ring-rose-500/20', icon: CircleX },
-  FAILED: { chip: 'bg-rose-500/10 text-rose-400 ring-rose-500/20', icon: CircleX },
-  REFUNDED: { chip: 'bg-slate-500/10 text-slate-400 ring-slate-500/20', icon: Undo2 },
-  ACTIVE: { chip: 'bg-emerald-500/10 text-emerald-400 ring-emerald-500/20', icon: CircleCheck },
-  INACTIVE: { chip: 'bg-slate-500/10 text-slate-400 ring-slate-500/20', icon: CircleX },
-  COD: { chip: 'bg-violet-500/10 text-violet-400 ring-violet-500/20', icon: CreditCard },
+  PENDING: { chip: 'bg-amber-500/10 text-amber-700 dark:text-amber-400 ring-amber-500/20', icon: Clock },
+  PAID: { chip: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-emerald-500/20', icon: Wallet },
+  PROCESSING: { chip: 'bg-sky-500/10 text-sky-700 dark:text-sky-400 ring-sky-500/20', icon: Loader },
+  SHIPPED: { chip: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 ring-indigo-500/20', icon: Truck },
+  DELIVERED: { chip: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-emerald-500/20', icon: CircleCheck },
+  CANCELLED: { chip: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-rose-500/20', icon: CircleX },
+  FAILED: { chip: 'bg-rose-500/10 text-rose-600 dark:text-rose-400 ring-rose-500/20', icon: CircleX },
+  REFUNDED: { chip: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 ring-slate-500/20', icon: Undo2 },
+  ACTIVE: { chip: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 ring-emerald-500/20', icon: CircleCheck },
+  INACTIVE: { chip: 'bg-slate-500/10 text-slate-600 dark:text-slate-400 ring-slate-500/20', icon: CircleX },
+  COD: { chip: 'bg-violet-500/10 text-violet-600 dark:text-violet-400 ring-violet-500/20', icon: CreditCard },
 }
 
 const props = withDefaults(
@@ -44,7 +44,7 @@ const props = withDefaults(
 const entry = computed(() => STATUS_STYLES[props.value ?? ''])
 
 const chip = computed(
-  () => entry.value?.chip ?? 'bg-slate-500/10 text-slate-400 ring-slate-500/20',
+  () => entry.value?.chip ?? 'bg-slate-500/10 text-slate-600 dark:text-slate-400 ring-slate-500/20',
 )
 
 const label = computed(() => props.value ?? '—')

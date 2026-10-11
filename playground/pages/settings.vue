@@ -126,33 +126,33 @@ const confirmDisconnect = async () => {
   >
     <div class="grid grid-cols-1 gap-4 lg:grid-cols-2">
       <!-- Account -->
-      <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 shadow-card">
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 shadow-card">
         <div class="flex items-center gap-2">
-          <KeyRound class="h-4 w-4 text-indigo-400" />
-          <h2 class="text-sm font-semibold text-slate-100">
+          <KeyRound class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+          <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Account
           </h2>
         </div>
 
         <dl class="mt-4 space-y-2 text-sm">
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-300">
+            <dt class="text-slate-700 dark:text-slate-300">
               Signed in as
             </dt>
-            <dd class="truncate font-medium text-slate-100">
+            <dd class="truncate font-medium text-slate-900 dark:text-slate-100">
               {{ user?.email ?? '—' }}
             </dd>
           </div>
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-300">
+            <dt class="text-slate-700 dark:text-slate-300">
               Name
             </dt>
-            <dd class="font-medium text-slate-100">
+            <dd class="font-medium text-slate-900 dark:text-slate-100">
               {{ user?.name ?? '—' }}
             </dd>
           </div>
           <div class="flex justify-between gap-4">
-            <dt class="text-slate-300">
+            <dt class="text-slate-700 dark:text-slate-300">
               Role
             </dt>
             <dd>
@@ -164,26 +164,26 @@ const confirmDisconnect = async () => {
           </div>
         </dl>
 
-        <p class="mt-4 border-t border-slate-800/80 pt-3 text-xs text-slate-400">
+        <p class="mt-4 border-t border-slate-200 dark:border-slate-800/80 pt-3 text-xs text-slate-600 dark:text-slate-400">
           Edit your name, email or active flag on the
           <NuxtLink
             to="/users"
-            class="font-medium text-indigo-400 hover:underline"
+            class="font-medium text-indigo-600 dark:text-indigo-400 hover:underline"
           >Users</NuxtLink>
           page.
         </p>
       </section>
 
       <!-- API connection -->
-      <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 shadow-card">
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 shadow-card">
         <div class="flex items-center gap-2">
-          <Server class="h-4 w-4 text-indigo-400" />
-          <h2 class="text-sm font-semibold text-slate-100">
+          <Server class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+          <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
             API connection
           </h2>
         </div>
 
-        <p class="mt-3 text-sm text-slate-300">
+        <p class="mt-3 text-sm text-slate-700 dark:text-slate-300">
           The dashboard reads and writes through the Nest API. These values come from the
           runtime config, so they change with the deployment rather than the code.
         </p>
@@ -195,19 +195,19 @@ const confirmDisconnect = async () => {
               { label: 'Server (SSR)', value: config.apiBaseServer || config.public.apiBase },
             ]"
             :key="entry.label"
-            class="flex items-center justify-between gap-3 rounded-lg bg-slate-950 px-3 py-2"
+            class="flex items-center justify-between gap-3 rounded-lg bg-slate-50 dark:bg-slate-950 px-3 py-2"
           >
             <div class="min-w-0">
-              <p class="text-xs text-slate-400">
+              <p class="text-xs text-slate-600 dark:text-slate-400">
                 {{ entry.label }}
               </p>
-              <p class="truncate font-mono text-xs text-slate-100">
+              <p class="truncate font-mono text-xs text-slate-900 dark:text-slate-100">
                 {{ entry.value }}
               </p>
             </div>
             <button
               type="button"
-              class="shrink-0 rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-900/60 hover:text-indigo-400"
+              class="shrink-0 rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-white/60 dark:hover:bg-slate-900/60 hover:text-indigo-600 dark:hover:text-indigo-400"
               :aria-label="`Copy ${entry.label}`"
               @click="copy(String(entry.value), entry.label)"
             >
@@ -218,10 +218,10 @@ const confirmDisconnect = async () => {
       </section>
 
       <!-- Password -->
-      <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 shadow-card">
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 shadow-card">
         <div class="flex items-center gap-2">
-          <KeyRound class="h-4 w-4 text-indigo-400" />
-          <h2 class="text-sm font-semibold text-slate-100">
+          <KeyRound class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+          <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
             Change password
           </h2>
         </div>
@@ -272,7 +272,7 @@ const confirmDisconnect = async () => {
 
           <p
             v-if="passwordError"
-            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+            class="rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
           >
             {{ passwordError }}
           </p>
@@ -288,17 +288,17 @@ const confirmDisconnect = async () => {
       </section>
 
       <!-- Telegram -->
-      <section class="rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 shadow-card">
+      <section class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 shadow-card">
         <div class="flex items-center justify-between gap-2">
           <div class="flex items-center gap-2">
-            <Bell class="h-4 w-4 text-indigo-400" />
-            <h2 class="text-sm font-semibold text-slate-100">
+            <Bell class="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-100">
               Telegram notifications
             </h2>
           </div>
           <button
             type="button"
-            class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100"
+            class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100"
             aria-label="Refresh Telegram status"
             @click="refreshTelegram()"
           >
@@ -309,20 +309,20 @@ const confirmDisconnect = async () => {
           </button>
         </div>
 
-        <p class="mt-3 text-sm text-slate-300">
+        <p class="mt-3 text-sm text-slate-700 dark:text-slate-300">
           Connect your Telegram account to receive order, payment and low-stock alerts.
         </p>
 
         <div
           v-if="telegram?.connected"
-          class="mt-4 flex items-center justify-between gap-3 rounded-lg bg-slate-950 px-3 py-2.5"
+          class="mt-4 flex items-center justify-between gap-3 rounded-lg bg-slate-50 dark:bg-slate-950 px-3 py-2.5"
         >
           <div class="min-w-0">
-            <p class="flex items-center gap-1.5 text-sm font-medium text-slate-100">
-              <Check class="h-3.5 w-3.5 text-emerald-400" />
+            <p class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-slate-100">
+              <Check class="h-3.5 w-3.5 text-emerald-700 dark:text-emerald-400" />
               Connected
             </p>
-            <p class="truncate text-xs text-slate-400">
+            <p class="truncate text-xs text-slate-600 dark:text-slate-400">
               @{{ telegram.username ?? 'unknown' }}
               <span v-if="telegram.linkedAt"> · since {{ formatDateTime(telegram.linkedAt) }}</span>
             </p>
@@ -352,16 +352,16 @@ const confirmDisconnect = async () => {
 
           <div
             v-else
-            class="mt-4 space-y-3 rounded-lg border border-slate-800/80 bg-slate-950 p-3"
+            class="mt-4 space-y-3 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950 p-3"
           >
             <div class="flex items-center justify-between gap-2">
-              <p class="flex items-center gap-1.5 text-sm font-medium text-slate-100">
-                <Link2 class="h-3.5 w-3.5 text-indigo-400" />
+              <p class="flex items-center gap-1.5 text-sm font-medium text-slate-900 dark:text-slate-100">
+                <Link2 class="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
                 Open in Telegram
               </p>
               <button
                 type="button"
-                class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-900/60 hover:text-indigo-400"
+                class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-white/60 dark:hover:bg-slate-900/60 hover:text-indigo-600 dark:hover:text-indigo-400"
                 aria-label="Copy connect link"
                 @click="copy(link.url, 'Connect link')"
               >
@@ -369,11 +369,11 @@ const confirmDisconnect = async () => {
               </button>
             </div>
 
-            <p class="break-all font-mono text-xs text-slate-300">
+            <p class="break-all font-mono text-xs text-slate-700 dark:text-slate-300">
               {{ link.url }}
             </p>
 
-            <p class="text-xs text-slate-400">
+            <p class="text-xs text-slate-600 dark:text-slate-400">
               Expires {{ formatDateTime(link.expiresAt) }}. Starting the bot with this link pairs
               it with your account.
             </p>
@@ -404,7 +404,7 @@ const confirmDisconnect = async () => {
 
         <p
           v-if="disconnectError"
-          class="mt-3 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+          class="mt-3 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
         >
           {{ disconnectError }}
         </p>

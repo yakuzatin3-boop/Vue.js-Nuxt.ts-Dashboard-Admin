@@ -76,7 +76,7 @@ onBeforeUnmount(() => {
     >
       <div
         v-if="open"
-        class="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-[oklch(24/_0.028_265_/_0.45)] p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
+        class="fixed inset-0 z-50 flex items-end justify-center overflow-y-auto bg-[oklch(0_0_0_/_0.4)] dark:bg-[oklch(24_0.028_265_/_0.45)] p-0 backdrop-blur-[2px] sm:items-center sm:p-6"
         @click.self="!busy && emit('close')"
       >
         <div
@@ -85,25 +85,25 @@ onBeforeUnmount(() => {
           aria-modal="true"
           :aria-label="title"
           :class="[
-            'flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl bg-slate-900 shadow-raised sm:rounded-2xl',
+            'flex max-h-[92vh] w-full flex-col overflow-hidden rounded-t-2xl bg-white dark:bg-slate-900 shadow-raised sm:rounded-2xl',
             SIZES[size],
           ]"
         >
-          <header class="flex items-start justify-between gap-4 border-b border-slate-800/80 px-5 py-4">
+          <header class="flex items-start justify-between gap-4 border-b border-slate-200 dark:border-slate-800/80 px-5 py-4">
             <div class="min-w-0">
-              <h2 class="text-base font-semibold text-slate-100">
+              <h2 class="text-base font-semibold text-slate-900 dark:text-slate-100">
                 {{ title }}
               </h2>
               <p
                 v-if="description"
-                class="mt-0.5 text-sm text-slate-300"
+                class="mt-0.5 text-sm text-slate-700 dark:text-slate-300"
               >
                 {{ description }}
               </p>
             </div>
             <button
               type="button"
-              class="-mr-1 -mt-1 rounded-lg p-1.5 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100 disabled:opacity-40"
+              class="-mr-1 -mt-1 rounded-lg p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 disabled:opacity-40"
               :disabled="busy"
               aria-label="Close dialog"
               @click="emit('close')"
@@ -118,7 +118,7 @@ onBeforeUnmount(() => {
 
           <footer
             v-if="$slots.footer"
-            class="flex items-center justify-end gap-2 border-t border-slate-800/80 bg-slate-950/50 px-5 py-3"
+            class="flex items-center justify-end gap-2 border-t border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 px-5 py-3"
           >
             <slot name="footer" />
           </footer>

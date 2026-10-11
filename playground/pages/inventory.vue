@@ -249,32 +249,32 @@ const confirmRemove = async () => {
 
     <div class="space-y-4">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Tracked products
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ total }}
           </p>
         </div>
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Units on hand
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ formatNumber(totalUnits) }}
           </p>
         </div>
         <div
           class="rounded-xl border px-4 py-3 shadow-card"
-          :class="lowStockCount ? 'border-amber-500/20 bg-amber-500/10' : 'border-slate-800/80 bg-slate-900/60'"
+          :class="lowStockCount ? 'border-amber-500/20 bg-amber-500/10' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60'"
         >
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Low or out of stock
           </p>
           <p
             class="nums mt-1 text-xl font-semibold"
-            :class="lowStockCount ? 'text-amber-400' : 'text-slate-100'"
+            :class="lowStockCount ? 'text-amber-700 dark:text-amber-400' : 'text-slate-900 dark:text-slate-100'"
           >
             {{ lowStockCount }}
           </p>
@@ -286,12 +286,12 @@ const confirmRemove = async () => {
           v-model="search"
           type="search"
           placeholder="Filter by product name or SKU…"
-          class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+          class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
         >
 
         <p
           v-if="untrackedProducts.length"
-          class="text-xs text-slate-400"
+          class="text-xs text-slate-600 dark:text-slate-400"
         >
           {{ untrackedProducts.length }} product(s) not yet tracked
         </p>
@@ -304,10 +304,10 @@ const confirmRemove = async () => {
         :empty-text="search ? 'No stock records match your filter.' : 'No stock records yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -321,11 +321,11 @@ const confirmRemove = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="row in items"
                   :key="row.id"
-                  class="hover:bg-slate-800/30"
+                  class="hover:bg-slate-100 dark:hover:bg-slate-800/30"
                   :class="isLowStock(row) ? 'bg-amber-500/10' : ''"
                 >
                   <td class="px-4 py-3">
@@ -334,34 +334,34 @@ const confirmRemove = async () => {
                         v-if="row.product?.image"
                         :src="row.product.image"
                         :alt="row.product.name"
-                        class="h-8 w-8 shrink-0 rounded-md object-cover ring-1 ring-slate-800"
+                        class="h-8 w-8 shrink-0 rounded-md object-cover ring-1 ring-slate-200 dark:ring-slate-800"
                       >
                       <div class="min-w-0">
-                        <p class="font-medium text-slate-100">
+                        <p class="font-medium text-slate-900 dark:text-slate-100">
                           {{ row.product?.name ?? `#${row.productId}` }}
                         </p>
-                        <p class="text-xs text-slate-400">
+                        <p class="text-xs text-slate-600 dark:text-slate-400">
                           {{ row.product?.sku ?? 'No SKU' }}
                         </p>
                       </div>
                     </div>
                   </td>
-                  <td class="nums px-4 py-3 text-right font-medium text-slate-100">
+                  <td class="nums px-4 py-3 text-right font-medium text-slate-900 dark:text-slate-100">
                     {{ formatNumber(row.quantity) }}
                   </td>
-                  <td class="nums px-4 py-3 text-right text-slate-300">
+                  <td class="nums px-4 py-3 text-right text-slate-700 dark:text-slate-300">
                     {{ formatNumber(row.reserved) }}
                   </td>
-                  <td class="nums px-4 py-3 text-right font-medium text-slate-100">
+                  <td class="nums px-4 py-3 text-right font-medium text-slate-900 dark:text-slate-100">
                     {{ formatNumber(row.quantity - row.reserved) }}
                   </td>
-                  <td class="nums px-4 py-3 text-right text-slate-300">
+                  <td class="nums px-4 py-3 text-right text-slate-700 dark:text-slate-300">
                     {{ formatNumber(row.lowStockThreshold) }}
                   </td>
                   <td class="px-4 py-3">
                     <StatusBadge :value="isLowStock(row) ? 'PENDING' : 'ACTIVE'" />
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ formatRelative(row.updatedAt) }}
                   </td>
                   <td class="px-4 py-3">
@@ -370,7 +370,7 @@ const confirmRemove = async () => {
                         type="button"
                         :aria-label="`Add stock to ${row.product?.name ?? row.productId}`"
                         title="Add stock"
-                        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-emerald-500/10 hover:text-emerald-400"
+                        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-emerald-500/10 hover:text-emerald-700 dark:hover:text-emerald-400"
                         @click="openAdjust(row, 'add')"
                       >
                         <Plus class="h-3.5 w-3.5" />
@@ -380,7 +380,7 @@ const confirmRemove = async () => {
                         :aria-label="`Remove stock from ${row.product?.name ?? row.productId}`"
                         title="Remove stock"
                         :disabled="row.quantity === 0"
-                        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-40"
+                        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400 disabled:cursor-not-allowed disabled:opacity-40"
                         @click="openAdjust(row, 'remove')"
                       >
                         <Minus class="h-3.5 w-3.5" />
@@ -389,7 +389,7 @@ const confirmRemove = async () => {
                         type="button"
                         :aria-label="`Delete stock record for ${row.product?.name ?? row.productId}`"
                         title="Delete record"
-                        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
+                        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400"
                         @click="removalTarget = row"
                       >
                         <Trash2 class="h-3.5 w-3.5" />
@@ -476,7 +476,7 @@ const confirmRemove = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>
@@ -508,9 +508,9 @@ const confirmRemove = async () => {
       @close="adjustOpen = false"
     >
       <div class="space-y-4">
-        <div class="flex items-center justify-between rounded-lg bg-slate-950 px-3 py-2.5 text-sm">
-          <span class="text-slate-300">Currently on hand</span>
-          <span class="nums font-semibold text-slate-100">
+        <div class="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm">
+          <span class="text-slate-700 dark:text-slate-300">Currently on hand</span>
+          <span class="nums font-semibold text-slate-900 dark:text-slate-100">
             {{ formatNumber(adjustTarget?.quantity ?? 0) }} units
           </span>
         </div>
@@ -556,12 +556,12 @@ const confirmRemove = async () => {
 
         <div
           v-if="projectedQuantity !== null && projectedQuantity >= 0"
-          class="flex items-center justify-between rounded-lg bg-slate-950 px-3 py-2.5 text-sm"
+          class="flex items-center justify-between rounded-lg bg-slate-50 dark:bg-slate-950 px-3 py-2.5 text-sm"
         >
-          <span class="text-slate-300">After this change</span>
+          <span class="text-slate-700 dark:text-slate-300">After this change</span>
           <span
             class="nums font-semibold"
-            :class="projectedQuantity <= (adjustTarget?.lowStockThreshold ?? 0) ? 'text-amber-400' : 'text-slate-100'"
+            :class="projectedQuantity <= (adjustTarget?.lowStockThreshold ?? 0) ? 'text-amber-700 dark:text-amber-400' : 'text-slate-900 dark:text-slate-100'"
           >
             {{ formatNumber(projectedQuantity) }} units
           </span>
@@ -570,7 +570,7 @@ const confirmRemove = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>

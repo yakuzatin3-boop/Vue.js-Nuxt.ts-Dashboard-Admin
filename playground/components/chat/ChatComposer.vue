@@ -80,7 +80,7 @@ const onPaste = (event: ClipboardEvent) => {
 </script>
 
 <template>
-  <div class="border-t border-slate-800/80 bg-slate-900/60 px-4 py-4 sm:px-5">
+  <div class="border-t border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-4 sm:px-5">
     <div
       v-if="suggestions.length"
       class="mb-3 flex flex-wrap items-center gap-2"
@@ -89,7 +89,7 @@ const onPaste = (event: ClipboardEvent) => {
         v-for="suggestion in suggestions"
         :key="suggestion"
         type="button"
-        class="rounded-full border border-slate-800/80 bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-indigo-400 disabled:opacity-50"
+        class="rounded-full border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:border-indigo-500/40 hover:bg-indigo-500/10 hover:text-indigo-600 dark:hover:text-indigo-400 disabled:opacity-50"
         :disabled="busy"
         @click="emit('suggest', suggestion)"
       >
@@ -119,7 +119,7 @@ const onPaste = (event: ClipboardEvent) => {
           placeholder="Ask about revenue, orders, products, stock, payments or customers…"
           autocomplete="off"
           aria-describedby="chart-bot-hint"
-          class="max-h-40 w-full resize-none rounded-xl border border-slate-800/80 bg-slate-950/50 px-3.5 py-2.5 text-sm leading-6 text-slate-100 transition-colors outline-none placeholder:text-slate-500 focus:border-indigo-500/40 focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-60"
+          class="max-h-40 w-full resize-none rounded-xl border border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 px-3.5 py-2.5 text-sm leading-6 text-slate-900 dark:text-slate-100 transition-colors outline-none placeholder:text-slate-500 focus:border-indigo-500/40 focus:bg-white dark:focus:bg-slate-900 focus:ring-2 focus:ring-indigo-500/20 disabled:cursor-not-allowed disabled:opacity-60"
           @input="onInput"
           @keydown="onKeydown"
           @paste="onPaste"
@@ -147,12 +147,12 @@ const onPaste = (event: ClipboardEvent) => {
 
     <p
       id="chart-bot-hint"
-      class="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-400"
+      class="mt-2 flex flex-wrap items-center justify-between gap-2 text-[11px] text-slate-600 dark:text-slate-400"
     >
       <span>Enter sends · Shift+Enter adds a line</span>
       <span
         class="nums"
-        :class="atLimit ? 'text-amber-400' : ''"
+        :class="atLimit ? 'text-amber-700 dark:text-amber-400' : ''"
       >
         {{ remaining }} characters left
       </span>

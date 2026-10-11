@@ -30,11 +30,11 @@ const onChange = (event: Event) => {
     :disabled="disabled"
     :aria-invalid="invalid || undefined"
     :class="[
-      'w-full rounded-lg border bg-slate-900/60 px-3 py-2 text-sm text-slate-100 outline-none transition-colors',
-      'focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-950/60 disabled:text-slate-400',
+      'w-full rounded-lg border bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors',
+      'focus:ring-2 disabled:cursor-not-allowed disabled:bg-slate-50 dark:disabled:bg-slate-950/60 disabled:text-slate-600 dark:disabled:text-slate-400',
       invalid
         ? 'border-rose-500/20 focus:border-rose-500/30 focus:ring-rose-500/20'
-        : 'border-slate-800 hover:border-slate-700/80 focus:border-indigo-500/40 focus:ring-indigo-500/20',
+        : 'border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700/80 focus:border-indigo-500/40 focus:ring-indigo-500/20',
     ]"
     @change="onChange"
   >

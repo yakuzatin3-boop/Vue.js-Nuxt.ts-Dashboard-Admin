@@ -4,9 +4,9 @@ import { CircleAlert, CircleCheck, Info, X } from '@lucide/vue'
 const { toasts, dismiss } = useToast()
 
 const TONES = {
-  success: { chip: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-300', icon: CircleCheck, iconTone: 'text-emerald-400' },
-  error: { chip: 'border-rose-500/20 bg-rose-500/10 text-rose-300', icon: CircleAlert, iconTone: 'text-rose-400' },
-  info: { chip: 'border-slate-800 bg-slate-900/60 text-slate-100', icon: Info, iconTone: 'text-indigo-400' },
+  success: { chip: 'border-emerald-500/20 bg-emerald-500/10 text-emerald-700 dark:text-emerald-300', icon: CircleCheck, iconTone: 'text-emerald-700 dark:text-emerald-400' },
+  error: { chip: 'border-rose-500/20 bg-rose-500/10 text-rose-600 dark:text-rose-300', icon: CircleAlert, iconTone: 'text-rose-600 dark:text-rose-400' },
+  info: { chip: 'border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-slate-900 dark:text-slate-100', icon: Info, iconTone: 'text-indigo-600 dark:text-indigo-400' },
 } as const
 </script>
 

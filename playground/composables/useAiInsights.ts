@@ -19,6 +19,7 @@ import {
   INSIGHTS_DEFAULT_CHART_QUESTION,
   INSIGHTS_WELCOME,
 } from '~/types/ai-insights'
+import { readSseError, readSseStream } from '~/utils/sse'
 
 const STREAM_TIMEOUT_MS = 90_000
 
@@ -110,17 +111,6 @@ export const useAiInsights = () => {
       void navigateTo('/login')
   }
 
-  const readSseError = async (res: Response): Promise<Error> => {
-    const raw = await res.text().catch(() => '')
-
-    const data = raw
-      ? (JSON.parse(raw) as { message?: string | string[] }).message
-      : undefined
-    const message = Array.isArray(data) ? data.join(', ') : (data ?? `Request failed (${res.status})`)
-
-    return new Error(message)
-  }
-
   /** Appends a `delta` token to the running assistant turn. */
   const appendToken = (text: string) => {
     const last = messages.value.at(-1)
@@ -210,7 +200,7 @@ export const useAiInsights = () => {
         throw new Error('The stream produced no response body.')
       }
 
-      await readStream(res.body, {
+      await readSseStream(res.body, {
         onDelta: text => appendToken(text),
         onDone: reply => finalizeTurn(reply),
         onError: message => failTurn(message),
@@ -276,74 +266,5 @@ export const useAiInsights = () => {
     clear,
     retry,
     copyLastAnswer,
-  }
-}
-
-/**
- * Consumes an SSE response body frame-by-frame. Frames are separated by a blank
- * line; each carries an `event:` name and one or more `data:` payload lines.
- */
-async function readStream(
-  body: ReadableStream<Uint8Array>,
-  handlers: {
-    onDelta: (text: string) => void
-    onDone: (reply: string) => void
-    onError: (message: string) => void
-  },
-): Promise<void> {
-  const reader = body.getReader()
-  const decoder = new TextDecoder()
-  let buffer = ''
-
-  const handleFrame = (frame: string) => {
-    let event = 'message'
-    const dataLines: string[] = []
-
-    for (const line of frame.split('\n')) {
-      if (line.startsWith('event:'))
-        event = line.slice(6).trim()
-      else if (line.startsWith('data:'))
-        dataLines.push(line.slice(5).trim())
-    }
-
-    if (!dataLines.length)
-      return
-
-    const data = JSON.parse(dataLines.join('\n')) as {
-      text?: string
-      reply?: string
-      message?: string
-    }
-
-    if (event === 'delta' && typeof data.text === 'string')
-      handlers.onDelta(data.text)
-
-    if (event === 'done' && typeof data.reply === 'string')
-      handlers.onDone(data.reply)
-
-    if (event === 'error' && typeof data.message === 'string')
-      handlers.onError(data.message)
-  }
-
-  for (;;) {
-    const { done, value } = await reader.read()
-
-    if (done)
-      break
-
-    buffer += decoder.decode(value, { stream: true })
-
-    let separator = buffer.indexOf('\n\n')
-
-    while (separator !== -1) {
-      const frame = buffer.slice(0, separator)
-
-      buffer = buffer.slice(separator + 2)
-
-      if (frame.trim())
-        handleFrame(frame)
-
-      separator = buffer.indexOf('\n\n')
-    }
   }
 }

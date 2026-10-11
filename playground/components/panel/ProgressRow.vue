@@ -37,16 +37,16 @@ const percent = computed(() => {
     >
       <span
         v-if="label"
-        class="truncate text-sm text-slate-300"
+        class="truncate text-sm text-slate-700 dark:text-slate-300"
       >{{ label }}</span>
       <span
         v-if="detail"
-        class="nums shrink-0 text-xs font-medium text-slate-400"
+        class="nums shrink-0 text-xs font-medium text-slate-600 dark:text-slate-400"
       >{{ detail }}</span>
     </div>
 
     <div
-      class="h-2 w-full overflow-hidden rounded-full bg-slate-800"
+      class="h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800"
       role="progressbar"
       :aria-valuenow="Math.round(percent)"
       aria-valuemin="0"

@@ -94,7 +94,7 @@ const labelStride = computed(() => {
   >
     <div
       v-if="!points.length"
-      class="flex items-center justify-center text-sm text-slate-400"
+      class="flex items-center justify-center text-sm text-slate-600 dark:text-slate-400"
       :style="{ height: `${height}px` }"
     >
       No data for this period.
@@ -115,7 +115,7 @@ const labelStride = computed(() => {
           :x="PAD_LEFT - 8"
           :y="line.y + 3"
           text-anchor="end"
-          class="fill-slate-400 text-[10px]"
+          class="fill-slate-600 dark:fill-slate-400 text-[10px]"
         >{{ valueFormatter(Math.round(line.value)) }}</text>
 
         <line
@@ -125,7 +125,7 @@ const labelStride = computed(() => {
           :x2="width - PAD_RIGHT"
           :y1="line.y"
           :y2="line.y"
-          class="stroke-slate-800"
+          class="stroke-slate-200 dark:stroke-slate-800"
           stroke-width="1"
         />
       </g>
@@ -154,7 +154,7 @@ const labelStride = computed(() => {
           :x="bar.labelX"
           :y="height - 10"
           text-anchor="middle"
-          class="fill-slate-400 text-[10px]"
+          class="fill-slate-600 dark:fill-slate-400 text-[10px]"
         >{{ bar.label }}</text>
       </g>
     </svg>

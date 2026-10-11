@@ -151,6 +151,10 @@ redirects unauthenticated requests to `/login` and sends authenticated users awa
 from it. Sessions live in an `access-token` cookie; a 401 from any request clears
 it and returns the user to the login screen.
 
+> The token is readable from JavaScript, because SSR and the browser both need it
+> to attach the `Authorization` header. For a public deployment, move it to an
+> httpOnly cookie set by the API and drop the client-side reads.
+
 ## Scripts
 
 | Command | Description |

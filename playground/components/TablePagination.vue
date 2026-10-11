@@ -13,13 +13,13 @@ defineEmits<{ previous: [], next: [] }>()
 </script>
 
 <template>
-  <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-800/80 px-4 py-3">
-    <p class="nums text-sm text-slate-300">
-      <span class="font-semibold text-slate-100">{{ total.toLocaleString() }}</span>
+  <div class="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 dark:border-slate-800/80 px-4 py-3">
+    <p class="nums text-sm text-slate-700 dark:text-slate-300">
+      <span class="font-semibold text-slate-900 dark:text-slate-100">{{ total.toLocaleString() }}</span>
       <span v-if="unit">{{ unit }}</span>
       <span
         v-if="pages > 0"
-        class="text-slate-400"
+        class="text-slate-600 dark:text-slate-400"
       > · page {{ page }} of {{ pages }}</span>
     </p>
 
@@ -29,7 +29,7 @@ defineEmits<{ previous: [], next: [] }>()
     >
       <button
         type="button"
-        class="inline-flex items-center gap-1 rounded-md border border-slate-800/80 px-2 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+        class="inline-flex items-center gap-1 rounded-md border border-slate-200 dark:border-slate-800/80 px-2 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
         :disabled="page <= 1"
         @click="$emit('previous')"
       >
@@ -38,7 +38,7 @@ defineEmits<{ previous: [], next: [] }>()
       </button>
       <button
         type="button"
-        class="inline-flex items-center gap-1 rounded-md border border-slate-800/80 px-2 py-1.5 text-xs font-medium text-slate-300 transition-colors hover:bg-slate-800/30 hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+        class="inline-flex items-center gap-1 rounded-md border border-slate-200 dark:border-slate-800/80 px-2 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-300 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
         :disabled="page >= pages"
         @click="$emit('next')"
       >

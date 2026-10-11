@@ -39,14 +39,14 @@ const isActive = (to: string) => {
   >
     <div
       v-if="isMobileOpen"
-      class="fixed inset-0 z-30 bg-slate-950/70 backdrop-blur-sm lg:hidden"
+      class="fixed inset-0 z-30 bg-black/40 dark:bg-slate-950/70 backdrop-blur-sm lg:hidden"
       @click="closeMobile"
     />
   </Transition>
 
   <aside
     :class="[
-      'fixed inset-y-0 left-0 z-40 flex flex-col bg-slate-900 text-slate-100 transition-[width,transform] duration-300 ease-in-out',
+      'fixed inset-y-0 left-0 z-40 flex flex-col bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-[width,transform] duration-300 ease-in-out',
       // The collapsed width is a desktop-only affordance. On mobile the rail is
       // always a full-width drawer, otherwise a user who collapsed the sidebar
       // on a wide screen would be left with a 72px panel on their phone.
@@ -54,24 +54,24 @@ const isActive = (to: string) => {
       isMobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0',
     ]"
   >
-    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-800/80 px-4">
+    <div class="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 dark:border-slate-800/80 px-4">
       <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-indigo-600">
         <Store class="h-[18px] w-[18px] text-white" />
       </span>
 
       <template v-if="!isCollapsed">
-        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold tracking-tight text-slate-100">
+        <span class="min-w-0 flex-1 truncate text-[15px] font-semibold tracking-tight text-slate-900 dark:text-slate-100">
           Ecommerce
         </span>
 
-        <span class="shrink-0 rounded-md border border-indigo-500/30 bg-indigo-500/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-indigo-400">
+        <span class="shrink-0 rounded-md border border-indigo-500/30 bg-indigo-500/10 px-1.5 py-0.5 font-mono text-[10px] font-semibold text-indigo-600 dark:text-indigo-400">
           v2.4
         </span>
       </template>
 
       <button
         type="button"
-        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-slate-100 lg:hidden"
+        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100 lg:hidden"
         aria-label="Close navigation"
         @click="closeMobile"
       >
@@ -113,15 +113,15 @@ const isActive = (to: string) => {
                 // indigo tint, so the current page is unmistakable without
                 // relying on the label text alone.
                 isActive(item.to)
-                  ? 'border border-indigo-500/20 bg-indigo-600/10 text-indigo-400 shadow-sm'
-                  : 'border border-transparent text-slate-400 hover:bg-slate-800/30 hover:text-slate-100',
+                  ? 'border border-indigo-500/20 bg-indigo-600/10 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'border border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100',
               ]"
               @click="closeMobile"
             >
               <component
                 :is="item.icon"
                 class="h-[18px] w-[18px] shrink-0"
-                :class="isActive(item.to) ? 'text-indigo-400' : 'text-slate-500 group-hover:text-slate-300'"
+                :class="isActive(item.to) ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-500 group-hover:text-slate-700 dark:group-hover:text-slate-300'"
               />
 
               <span
@@ -138,7 +138,7 @@ const isActive = (to: string) => {
       The footer keeps the account context in collapsed mode, where it is the
       only place it appears: the header hides the name and role below sm.
     -->
-    <div class="shrink-0 border-t border-slate-800/80 p-4">
+    <div class="shrink-0 border-t border-slate-200 dark:border-slate-800/80 p-4">
       <div
         class="flex items-center gap-3"
         :class="isCollapsed ? 'flex-col gap-2' : ''"
@@ -155,7 +155,7 @@ const isActive = (to: string) => {
             v-if="!isCollapsed"
             class="min-w-0"
           >
-            <p class="truncate text-sm font-medium text-slate-100">
+            <p class="truncate text-sm font-medium text-slate-900 dark:text-slate-100">
               {{ user?.name ?? 'Admin' }}
             </p>
             <p class="truncate text-[11px] text-slate-500">
@@ -166,7 +166,7 @@ const isActive = (to: string) => {
 
         <button
           type="button"
-          class="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-800/30 hover:text-rose-400 disabled:opacity-60"
+          class="rounded-lg p-1.5 text-slate-500 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-rose-600 dark:hover:text-rose-400 disabled:opacity-60"
           :class="isCollapsed ? '' : 'ml-auto'"
           :aria-label="isLoggingOut ? 'Signing out' : 'Sign out'"
           :disabled="isLoggingOut"

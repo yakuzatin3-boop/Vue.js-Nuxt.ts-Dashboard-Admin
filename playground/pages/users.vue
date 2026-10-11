@@ -171,11 +171,11 @@ const submit = async () => {
     </template>
 
     <div class="space-y-4">
-      <div class="flex items-start gap-2 rounded-xl border border-slate-800/80 bg-indigo-500/10 px-3.5 py-2.5 text-sm text-slate-300">
-        <Info class="mt-0.5 h-4 w-4 shrink-0 text-indigo-400" />
+      <div class="flex items-start gap-2 rounded-xl border border-slate-200 dark:border-slate-800/80 bg-indigo-500/10 px-3.5 py-2.5 text-sm text-slate-700 dark:text-slate-300">
+        <Info class="mt-0.5 h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" />
         <p>
           Customers created here are active immediately and skip the email verification that
-          <code class="rounded bg-white/60 px-1 py-0.5 text-xs">POST /auth/register</code> requires.
+          <code class="rounded bg-slate-100 dark:bg-white/60 px-1 py-0.5 text-xs">POST /auth/register</code> requires.
           There is no delete endpoint, so accounts are deactivated instead.
         </p>
       </div>
@@ -184,7 +184,7 @@ const submit = async () => {
         v-model="search"
         type="search"
         placeholder="Filter by name, email or role…"
-        class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+        class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
       >
 
       <DataState
@@ -194,10 +194,10 @@ const submit = async () => {
         :empty-text="search ? 'No users match your filter.' : 'No users yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -210,30 +210,30 @@ const submit = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="row in items"
                   :key="row.id"
-                  class="hover:bg-slate-800/30"
+                  class="hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-3">
-                      <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/10 text-xs font-semibold text-indigo-400">
+                      <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-indigo-500/10 text-xs font-semibold text-indigo-600 dark:text-indigo-400">
                         {{ initials(row.name, row.email[0]?.toUpperCase() ?? 'U') }}
                       </span>
-                      <p class="font-medium text-slate-100">
+                      <p class="font-medium text-slate-900 dark:text-slate-100">
                         {{ row.name ?? '—' }}
                         <span
                           v-if="row.id === currentUser?.id"
-                          class="ml-1 text-xs font-normal text-indigo-400"
+                          class="ml-1 text-xs font-normal text-indigo-600 dark:text-indigo-400"
                         >(you)</span>
                       </p>
                     </div>
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ row.email }}
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     <StatusBadge
                       :value="row.role"
                       iconless
@@ -242,7 +242,7 @@ const submit = async () => {
                   <td class="px-4 py-3">
                     <StatusBadge :value="row.isActive ? 'ACTIVE' : 'INACTIVE'" />
                   </td>
-                  <td class="px-4 py-3 text-slate-300">
+                  <td class="px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ formatDate(row.createdAt) }}
                   </td>
                   <td class="px-4 py-3">
@@ -250,7 +250,7 @@ const submit = async () => {
                       <button
                         type="button"
                         :aria-label="`Edit ${row.email}`"
-                        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-slate-800/30 hover:text-indigo-400"
+                        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-indigo-600 dark:hover:text-indigo-400"
                         @click="openEdit(row)"
                       >
                         <Pencil class="h-3.5 w-3.5" />
@@ -339,7 +339,7 @@ const submit = async () => {
         />
         <p
           v-if="errors.isActive"
-          class="-mt-2 text-sm text-rose-400"
+          class="-mt-2 text-sm text-rose-600 dark:text-rose-400"
         >
           {{ errors.isActive }}
         </p>
@@ -347,7 +347,7 @@ const submit = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>

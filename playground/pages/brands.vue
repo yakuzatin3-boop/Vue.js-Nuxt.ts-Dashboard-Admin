@@ -164,7 +164,7 @@ const confirmRemove = async () => {
           v-model="search"
           type="search"
           placeholder="Filter brands…"
-          class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+          class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
         >
 
         <SortSelect
@@ -185,7 +185,7 @@ const confirmRemove = async () => {
           <article
             v-for="brand in items"
             :key="brand.id"
-            class="flex flex-col rounded-xl border border-slate-800/80 bg-slate-900/60 p-5 shadow-card"
+            class="flex flex-col rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 p-5 shadow-card"
           >
             <div class="flex items-start justify-between gap-3">
               <div class="flex min-w-0 items-center gap-3">
@@ -193,13 +193,13 @@ const confirmRemove = async () => {
                   v-if="brand.logo"
                   :src="brand.logo"
                   :alt="brand.name"
-                  class="h-9 w-9 shrink-0 rounded-lg object-cover ring-1 ring-slate-800"
+                  class="h-9 w-9 shrink-0 rounded-lg object-cover ring-1 ring-slate-200 dark:ring-slate-800"
                 >
                 <div class="min-w-0">
-                  <p class="truncate font-semibold text-slate-100">
+                  <p class="truncate font-semibold text-slate-900 dark:text-slate-100">
                     {{ brand.name }}
                   </p>
-                  <p class="text-xs text-slate-400">
+                  <p class="text-xs text-slate-600 dark:text-slate-400">
                     Created {{ formatDate(brand.createdAt) }}
                   </p>
                 </div>
@@ -207,13 +207,13 @@ const confirmRemove = async () => {
               <StatusBadge :value="brand.isActive ? 'ACTIVE' : 'INACTIVE'" />
             </div>
 
-            <p class="mt-3 line-clamp-3 flex-1 text-sm text-slate-300">
+            <p class="mt-3 line-clamp-3 flex-1 text-sm text-slate-700 dark:text-slate-300">
               {{ brand.description ?? 'No description' }}
             </p>
 
-            <div class="mt-4 flex items-center justify-between border-t border-slate-800/80 pt-3">
+            <div class="mt-4 flex items-center justify-between border-t border-slate-200 dark:border-slate-800/80 pt-3">
               <span
-                class="text-xs text-slate-400"
+                class="text-xs text-slate-600 dark:text-slate-400"
                 :title="formatDate(brand.updatedAt)"
               >Updated {{ formatRelative(brand.updatedAt) }}</span>
               <RowActions
@@ -228,7 +228,7 @@ const confirmRemove = async () => {
 
         <div
           v-if="total > pageSize"
-          class="mt-4 overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card"
+          class="mt-4 overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card"
         >
           <TablePagination
             :page="page"
@@ -293,7 +293,7 @@ const confirmRemove = async () => {
 
       <p
         v-if="saveError"
-        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-400"
+        class="mt-4 rounded-lg bg-rose-500/10 px-3 py-2 text-sm text-rose-600 dark:text-rose-400"
       >
         {{ saveError }}
       </p>

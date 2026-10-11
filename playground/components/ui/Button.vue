@@ -29,9 +29,9 @@ const props = withDefaults(
 
 const VARIANTS: Record<string, string> = {
   primary: 'bg-indigo-600 text-white hover:brightness-110 disabled:hover:brightness-100',
-  secondary: 'border border-slate-800 bg-slate-900/60 text-slate-300 hover:bg-slate-800/30 hover:text-slate-100',
-  ghost: 'text-slate-300 hover:bg-slate-800/30 hover:text-slate-100',
-  subtle: 'bg-indigo-500/10 text-indigo-400 hover:brightness-95',
+  secondary: 'border border-slate-200 dark:border-slate-800 bg-white/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100',
+  ghost: 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30 hover:text-slate-900 dark:hover:text-slate-100',
+  subtle: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 hover:brightness-95',
   danger: 'bg-rose-600 text-white hover:bg-rose-600',
 }
 

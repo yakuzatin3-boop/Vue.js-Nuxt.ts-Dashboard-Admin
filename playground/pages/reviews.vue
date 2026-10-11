@@ -106,32 +106,32 @@ const confirmRemove = async () => {
 
     <div class="space-y-4">
       <div class="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Total reviews
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ reviews?.length ?? 0 }}
           </p>
         </div>
-        <div class="rounded-xl border border-slate-800/80 bg-slate-900/60 px-4 py-3 shadow-card">
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+        <div class="rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-4 py-3 shadow-card">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Average rating
           </p>
-          <p class="nums mt-1 text-xl font-semibold text-slate-100">
+          <p class="nums mt-1 text-xl font-semibold text-slate-900 dark:text-slate-100">
             {{ averageRating === null ? '—' : averageRating.toFixed(2) }}
           </p>
         </div>
         <div
           class="rounded-xl border px-4 py-3 shadow-card"
-          :class="needsAttention ? 'border-amber-500/20 bg-amber-500/10' : 'border-slate-800/80 bg-slate-900/60'"
+          :class="needsAttention ? 'border-amber-500/20 bg-amber-500/10' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60'"
         >
-          <p class="text-[11px] font-semibold tracking-wider text-slate-400 uppercase">
+          <p class="text-[11px] font-semibold tracking-wider text-slate-600 dark:text-slate-400 uppercase">
             Rated 1–2 stars
           </p>
           <p
             class="nums mt-1 text-xl font-semibold"
-            :class="needsAttention ? 'text-amber-400' : 'text-slate-100'"
+            :class="needsAttention ? 'text-amber-700 dark:text-amber-400' : 'text-slate-900 dark:text-slate-100'"
           >
             {{ needsAttention }}
           </p>
@@ -143,7 +143,7 @@ const confirmRemove = async () => {
           <button
             type="button"
             class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="ratingFilter === '' ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400' : 'border-slate-800/80 bg-slate-900/60 text-slate-300 hover:bg-slate-800/30'"
+            :class="ratingFilter === '' ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30'"
             @click="ratingFilter = ''"
           >
             All
@@ -156,7 +156,7 @@ const confirmRemove = async () => {
             :key="option.value"
             type="button"
             class="rounded-lg border px-3 py-1.5 text-sm font-medium transition-colors"
-            :class="ratingFilter === option.value ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-400' : 'border-slate-800/80 bg-slate-900/60 text-slate-300 hover:bg-slate-800/30'"
+            :class="ratingFilter === option.value ? 'border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400' : 'border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/30'"
             @click="ratingFilter = option.value"
           >
             {{ option.label }}
@@ -167,7 +167,7 @@ const confirmRemove = async () => {
           v-model="search"
           type="search"
           placeholder="Filter by product, customer or comment…"
-          class="w-full max-w-xs rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
+          class="w-full max-w-xs rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2 text-sm outline-none transition-colors placeholder:text-slate-500 focus:border-indigo-500/40 focus:ring-2 focus:ring-indigo-500/20"
         >
       </div>
 
@@ -178,10 +178,10 @@ const confirmRemove = async () => {
         :empty-text="search || ratingFilter ? 'No reviews match your filters.' : 'No reviews yet.'"
         @refresh="refresh"
       >
-        <div class="overflow-hidden rounded-xl border border-slate-800/80 bg-slate-900/60 shadow-card">
+        <div class="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 shadow-card">
           <div class="overflow-x-auto">
             <table class="w-full text-left text-sm">
-              <thead class="border-b border-slate-800/80 bg-slate-950/50 text-[11px] tracking-wider text-slate-400 uppercase">
+              <thead class="border-b border-slate-200 dark:border-slate-800/80 bg-slate-50 dark:bg-slate-950/50 text-[11px] tracking-wider text-slate-600 dark:text-slate-400 uppercase">
                 <tr>
                   <SortableTh
                     v-for="column in COLUMNS"
@@ -195,45 +195,45 @@ const confirmRemove = async () => {
                   <th class="px-4 py-3" />
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-800/80">
+              <tbody class="divide-y divide-slate-200 dark:divide-slate-800/80">
                 <tr
                   v-for="review in items"
                   :key="review.id"
-                  class="align-top hover:bg-slate-800/30"
+                  class="align-top hover:bg-slate-100 dark:hover:bg-slate-800/30"
                 >
-                  <td class="px-4 py-3 font-medium text-slate-100">
+                  <td class="px-4 py-3 font-medium text-slate-900 dark:text-slate-100">
                     {{ review.product?.name ?? `#${review.productId}` }}
                   </td>
                   <td class="px-4 py-3">
                     <div class="flex items-center gap-2">
-                      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-800 text-xs font-semibold text-slate-300">
+                      <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-xs font-semibold text-slate-700 dark:text-slate-300">
                         {{ initials(review.user?.name, 'U') }}
                       </span>
                       <div class="min-w-0">
-                        <p class="truncate text-slate-100">
+                        <p class="truncate text-slate-900 dark:text-slate-100">
                           {{ review.user?.name ?? '—' }}
                         </p>
-                        <p class="truncate text-xs text-slate-400">
+                        <p class="truncate text-xs text-slate-600 dark:text-slate-400">
                           {{ review.user?.email }}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td class="px-4 py-3 text-right">
-                    <span class="inline-flex items-center gap-0.5 text-amber-400">
+                    <span class="inline-flex items-center gap-0.5 text-amber-700 dark:text-amber-400">
                       <Star
                         v-for="n in 5"
                         :key="n"
                         class="h-3.5 w-3.5"
-                        :class="n <= review.rating ? 'fill-current' : 'text-slate-700'"
+                        :class="n <= review.rating ? 'fill-current' : 'text-slate-300 dark:text-slate-700'"
                       />
                     </span>
                   </td>
-                  <td class="max-w-md px-4 py-3 text-slate-300">
+                  <td class="max-w-md px-4 py-3 text-slate-700 dark:text-slate-300">
                     {{ review.comment ?? '—' }}
                   </td>
                   <td
-                    class="px-4 py-3 text-slate-300"
+                    class="px-4 py-3 text-slate-700 dark:text-slate-300"
                     :title="formatDate(review.createdAt)"
                   >
                     {{ formatRelative(review.createdAt) }}
@@ -243,7 +243,7 @@ const confirmRemove = async () => {
                       <button
                         type="button"
                         :aria-label="`Delete review of ${review.product?.name ?? review.productId}`"
-                        class="rounded-md p-1.5 text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-400"
+                        class="rounded-md p-1.5 text-slate-600 dark:text-slate-400 transition-colors hover:bg-rose-500/10 hover:text-rose-600 dark:hover:text-rose-400"
                         @click="removalTarget = review"
                       >
                         <Trash2 class="h-3.5 w-3.5" />

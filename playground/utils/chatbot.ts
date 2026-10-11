@@ -1370,11 +1370,11 @@ const buildForecast = ({ series, analytics }: { series: Series, analytics: Analy
 
 const buildHelp = (): ChatReply => ({
   intent: 'help',
-  headline: 'I answer questions about this store using its own data, and I only show numbers that came from the API.',
+  headline: 'I answer store questions from the live data the dashboard shows. Anything I do not recognise is handed to the AI assistant.',
   blocks: [
     {
       kind: 'rank',
-      caption: 'Things you can ask',
+      caption: 'Store questions I answer from the data',
       rows: [
         { label: 'Store health', detail: '"How is the store doing?", "What should I work on?"' },
         { label: 'Revenue and trend', detail: '"Show me the revenue trend", "How did last month go?"' },
@@ -1388,12 +1388,21 @@ const buildHelp = (): ChatReply => ({
       ],
     },
     {
+      kind: 'rank',
+      caption: 'Open-ended questions the AI assistant handles',
+      rows: [
+        { label: 'Advice and ideas', detail: '"Give me marketing ideas for slow sellers"' },
+        { label: 'Restock guidance', detail: '"Which products should I restock first, and how much?"' },
+        { label: 'Summaries', detail: '"Summarize the store health and the biggest risk"' },
+      ],
+    },
+    {
       kind: 'note',
       tone: 'info',
-      text: 'Tip: ask about a specific month ("how did March go") or name a product directly. Everything is read live, so refresh the page after a change elsewhere and ask again.',
+      text: 'Tip: ask about a specific month ("how did March go") or name a product directly. Store answers are read live, so refresh after a change elsewhere and ask again.',
     },
   ],
-  suggestions: SUGGESTIONS.slice(0, 4).map(entry => entry.label),
+  suggestions: ['How is the store doing?', 'What are my top 5 products?', 'What should I work on?', 'Give me ideas to sell more'],
 })
 
 const buildThanks = (): ChatReply => ({
@@ -1405,15 +1414,15 @@ const buildThanks = (): ChatReply => ({
 
 const buildGreeting = (): ChatReply => ({
   intent: 'greeting',
-  headline: 'I am the Chart Bot. I read this store\'s live data, so every number I give you is one the dashboard would also show.',
+  headline: 'I am the Chart Bot. Store questions are answered from this store\'s live data, and anything else goes to the AI assistant.',
   blocks: [
     {
       kind: 'note',
       tone: 'info',
-      text: 'Ask a question in plain words. I understand revenue, orders, products, categories, stock, payments, customers, ratings and forecasts.',
+      text: 'Ask in plain words about revenue, orders, products, categories, stock, payments, customers, ratings and forecasts — or ask anything else and the AI assistant will take it.',
     },
   ],
-  suggestions: SUGGESTIONS.slice(0, 4).map(entry => entry.label),
+  suggestions: ['How is the store doing?', 'Show me the revenue trend', 'How did last month go?', 'What should I work on?'],
 })
 
 /* -------------------------------------------------------------------------- */

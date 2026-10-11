@@ -20,21 +20,21 @@ const toggle = () => {
     role="switch"
     :aria-checked="modelValue"
     :disabled="disabled"
-    class="flex w-full items-center justify-between gap-4 rounded-lg border border-slate-800/80 bg-slate-900/60 px-3 py-2.5 text-left transition-colors hover:bg-slate-800/30 disabled:cursor-not-allowed disabled:opacity-60"
+    class="flex w-full items-center justify-between gap-4 rounded-lg border border-slate-200 dark:border-slate-800/80 bg-white/60 dark:bg-slate-900/60 px-3 py-2.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-slate-800/30 disabled:cursor-not-allowed disabled:opacity-60"
     @click="toggle"
   >
     <span class="min-w-0">
-      <span class="block text-sm font-medium text-slate-100">{{ label }}</span>
+      <span class="block text-sm font-medium text-slate-900 dark:text-slate-100">{{ label }}</span>
       <span
         v-if="description"
-        class="mt-0.5 block text-xs text-slate-400"
+        class="mt-0.5 block text-xs text-slate-600 dark:text-slate-400"
       >{{ description }}</span>
     </span>
 
     <span
       :class="[
         'relative inline-flex h-5 w-9 shrink-0 items-center rounded-full transition-colors',
-        modelValue ? 'bg-indigo-600' : 'bg-slate-700',
+        modelValue ? 'bg-indigo-600' : 'bg-slate-300 dark:bg-slate-700',
       ]"
     >
       <span
